@@ -9,18 +9,11 @@ class Menu(TimeStampedModel) :
         db_table = 'menus'
 
 class Category(TimeStampedModel) :
-    menu    = models.ManyToManyField(Menu, through='Categories_Menus')
+    menu    = models.ForeignKey(Menu, on_delete=models.CASCADE)
     name    = models.CharField(max_length=20)
 
     class Meta :
         db_table = 'categories'
-
-class CategoryMenu(TimeStampedModel) :
-    menu        = models.ForeignKey(Menu,     on_delete=models.CASCADE)
-    category    = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-    class Meta :
-        db_table = 'categories_menus'
 
 class Product(TimeStampedModel) :
     name        = models.CharField(max_length=50)
@@ -52,10 +45,11 @@ class Image(TimeStampedModel) :
         db_table = 'images'
 
 class DetailedProduct(TimeStampedModel) :
-    categoryMenu = models.ForeignKey(CategoryMenu, on_delete=models.CASCADE)
+    menu         = models.ForeignKey(Menu,         on_delete=models.CASCADE)
+    category     = models.ForeignKey(Category,     on_delete=models.CASCADE)
     color        = models.ForeignKey(Color,        on_delete=models.CASCADE)
     size         = models.ForeignKey(Size,         on_delete=models.CASCADE)
     product      = models.ForeignKey(Product,      on_delete=models.CASCADE)
 
     class Meta : 
-        db_table = 'detailedProducts'
+        db_table = 'detailed_products'
