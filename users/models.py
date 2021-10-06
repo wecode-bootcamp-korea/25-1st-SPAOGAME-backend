@@ -1,5 +1,5 @@
 from django.db import models
-from timestamp import TimeStampedModel
+from core.models import TimeStampedModel
 
 class Gender(TimeStampedModel) :
     name          = models.CharField(max_length=100)
@@ -15,7 +15,7 @@ class User(TimeStampedModel) :
     mobile_number   = models.IntegerField()
     address1        = models.CharField(max_length=450)
     address2        = models.CharField(max_length=450)
-    birthday        = models.DateTimeField
+    birthday        = models.DateField()
     gender          = models.ForeignKey(Gender, on_delete=models.CASCADE)
 
     class Meta :
