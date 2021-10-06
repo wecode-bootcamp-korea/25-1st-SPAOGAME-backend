@@ -1,6 +1,6 @@
-from django.db      import models
+from django.db     import models
 
-from users.models   import TimeStampedModel
+from core.models   import TimeStampedModel
 
 class Wishlist(TimeStampedModel) :
     user    = models.ForeignKey('users.User', on_delete=models.CASCADE)

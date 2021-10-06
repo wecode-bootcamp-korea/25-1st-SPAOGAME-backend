@@ -1,7 +1,7 @@
 from django.db       import models
 
 from users.models    import User
-from core.models       import TimeStampedModel
+from core.models     import TimeStampedModel
 from products.models import Product
 
 

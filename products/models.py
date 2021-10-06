@@ -1,23 +1,23 @@
-from django.db      import models
+from django.db     import models
 
-from users.models   import TimeStampedModel
+from core.models   import TimeStampedModel
 
 class Menu(TimeStampedModel) :
-    name = models.CharField(max_length=20)
+    name    = models.CharField(max_length=20)
 
     class Meta :
         db_table = 'menus'
 
 class Category(TimeStampedModel) :
-    menu = models.ManyToManyField(Menu, through='Categories_Menus')
-    name = models.CharField(max_length=20)
+    menu    = models.ManyToManyField(Menu, through='Categories_Menus')
+    name    = models.CharField(max_length=20)
 
     class Meta :
         db_table = 'categories'
 
 class CategoryMenu(TimeStampedModel) :
-    menu     = models.ForeignKey(Menu,     on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    menu        = models.ForeignKey(Menu,     on_delete=models.CASCADE)
+    category    = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     class Meta :
         db_table = 'categories_menus'
@@ -44,9 +44,9 @@ class Size(TimeStampedModel) :
         db_table = 'sizes'
 
 class Image(TimeStampedModel) :
-    product = models.ForeignKey(Product,            on_delete=models.CASCADE)
-    posting = models.ForeignKey('postings.Posting', on_delete=models.CASCADE, null=True)
-    urls    = models.CharField(max_length=700)
+    product     = models.ForeignKey(Product,            on_delete=models.CASCADE)
+    posting     = models.ForeignKey('postings.Posting', on_delete=models.CASCADE, null=True)
+    urls        = models.CharField(max_length=700)
 
     class Meta :
         db_table = 'images'
