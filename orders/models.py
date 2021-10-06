@@ -1,6 +1,6 @@
-from django.db import models
+from django.db      import models
 
-from users.models import TimeStampedModel
+from users.models   import TimeStampedModel
 
 class Wishlist(TimeStampedModel) :
 
