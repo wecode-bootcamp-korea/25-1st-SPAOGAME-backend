@@ -3,23 +3,23 @@ from django.db     import models
 from core.models   import TimeStampedModel
 
 class Menu(TimeStampedModel) :
-    name    = models.CharField(max_length=20)
+    name    = models.CharField(max_length = 20)
 
     class Meta :
         db_table = 'menus'
 
 class Category(TimeStampedModel) :
     menu    = models.ForeignKey(Menu, on_delete=models.CASCADE)
-    name    = models.CharField(max_length=20)
+    name    = models.CharField(max_length = 20)
 
     class Meta :
         db_table = 'categories'
 
 class Product(TimeStampedModel) :
-    name        = models.CharField(max_length=50)
-    price       = models.IntegerField(max_length=15)
-    description = models.TextField(max_length=1000)
-    quantity    = models.IntegerField(max_length=5)
+    name        = models.CharField(max_length   =50)
+    price       = models.IntegerField()
+    description = models.TextField()
+    quantity    = models.IntegerField()
 
     class Meta :
         db_table = 'products'
