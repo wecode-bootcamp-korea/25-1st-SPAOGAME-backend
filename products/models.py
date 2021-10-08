@@ -16,7 +16,7 @@ class Category(TimeStampedModel) :
         db_table = 'categories'
 
 class Product(TimeStampedModel) :
-    name        = models.CharField(max_length   =50)
+    name        = models.CharField(max_length =50)
     price       = models.IntegerField()
     description = models.TextField()
     quantity    = models.IntegerField()
