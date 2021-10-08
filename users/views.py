@@ -1,6 +1,4 @@
 import json, re
-
-from django.db.models.fields import GenericIPAddressField
 import bcrypt, jwt
 
 from django.http import JsonResponse
@@ -10,7 +8,7 @@ from users.models import User
 from my_settings import MY_SECRET_KEY, MY_ALGORITHMS
 
 
-class SignupView(View):
+class SignUpView(View):
     def post(self, request):
         try:
             data                = json.loads(request.body)
