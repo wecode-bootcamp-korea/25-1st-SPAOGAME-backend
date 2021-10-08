@@ -15,7 +15,7 @@ import pymysql
 from pathlib import Path
 
 from my_settings import (
-    MY_ALGORITMHS,
+    MY_ALGORITHMS,
     MY_DATABASES,
     MY_SECRET_KEY
 )
@@ -32,12 +32,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = MY_SECRET_KEY
 
-ALGORITHMS = MY_ALGORITMHS
+ALGORITHMS = MY_ALGORITHMS
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-LLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -77,7 +77,7 @@ CORS_ALLOW_METHODS = (
     'OPTIONS',
     'PATCH',
     'PUT',
-    'DELETE'
+    'DELETE',
 )
 
 CORS_ALLOW_HEADERS = (

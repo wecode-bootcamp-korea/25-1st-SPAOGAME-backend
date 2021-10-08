@@ -6,20 +6,20 @@ from products.models import Product
 
 
 class Posting(TimeStampedModel):
-    user            = models.ForeignKey('users.User',       on_delete=models.CASCADE)
+    user            = models.ForeignKey('users.User', on_delete=models.CASCADE)
     product         = models.ForeignKey('products.Product', on_delete=models.CASCADE)
-    title           = models.CharField(max_length = 100, null=True)
-    content         = models.TextField(                  null=True)
-    rating          = models.IntegerField()
+    title           = models.CharField(max_length = 100)
+    content         = models.TextField(null = True)
+    rating          = models.IntegerField(null = True)
 
     class Meta:
         db_table = 'postings'
         
 class Comment(TimeStampedModel):
-    user            = models.ForeignKey('users.User',       on_delete=models.CASCADE)
+    user            = models.ForeignKey('users.User', on_delete=models.CASCADE)
     product         = models.ForeignKey('products.Product', on_delete=models.CASCADE)
-    posting         = models.ForeignKey(Posting,            on_delete=models.CASCADE)
-    content         = models.TextField(max_length = 200)
+    posting         = models.ForeignKey(Posting, on_delete=models.CASCADE)
+    content         = models.TextField(max_length=200)
   
     class Meta:
         db_table = 'comments'  
