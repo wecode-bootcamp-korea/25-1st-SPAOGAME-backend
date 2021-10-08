@@ -37,7 +37,7 @@ class Size(TimeStampedModel) :
         db_table = 'sizes'
 
 class Image(TimeStampedModel) :
-    product     = models.ForeignKey(Product,            on_delete=models.CASCADE)
+    product     = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
     posting     = models.ForeignKey('postings.Posting', on_delete=models.CASCADE, null=True)
     urls        = models.CharField(max_length=700)
 
@@ -45,11 +45,11 @@ class Image(TimeStampedModel) :
         db_table = 'images'
 
 class DetailedProduct(TimeStampedModel) :
-    menu         = models.ForeignKey(Menu,         on_delete=models.CASCADE)
-    category     = models.ForeignKey(Category,     on_delete=models.CASCADE)
-    color        = models.ForeignKey(Color,        on_delete=models.CASCADE)
-    size         = models.ForeignKey(Size,         on_delete=models.CASCADE)
-    product      = models.ForeignKey(Product,      on_delete=models.CASCADE)
+    menu         = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    category     = models.ForeignKey(Category, on_delete=models.CASCADE)
+    color        = models.ForeignKey(Color, on_delete=models.CASCADE)
+    size         = models.ForeignKey(Size, on_delete=models.CASCADE)
+    product      = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     class Meta : 
         db_table = 'detailed_products'
