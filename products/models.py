@@ -37,7 +37,7 @@ class Size(TimeStampedModel) :
         db_table = 'sizes'
 
 class Image(TimeStampedModel) :
-    product     = models.ForeignKey(Product,            on_delete=models.CASCADE)
+    product     = models.ForeignKey(Product,            on_delete=models.CASCADE, null=True)
     posting     = models.ForeignKey('postings.Posting', on_delete=models.CASCADE, null=True)
     urls        = models.CharField(max_length=700)
 
