@@ -7,7 +7,7 @@ from my_settings import MY_SECRET_KEY, MY_ALGORITHMS
 from .models import User
 
 def login_decorator(func):
-    def wraper(self, request, *args, **kwargs):
+    def wrapper(self, request, *args, **kwargs):
         try:
             access_token = request.headers.get('Authorization', None)
             token = jwt.decode(access_token, MY_SECRET_KEY, MY_ALGORITHMS)
@@ -18,4 +18,4 @@ def login_decorator(func):
         except User.DoesNotExist:
             return JsonResponse({'MESSAGE': 'USER_NOTEXIST'}, status=401)
         return func(self, request, *args, **kwargs)
-    return wraper
+    return wrapper
