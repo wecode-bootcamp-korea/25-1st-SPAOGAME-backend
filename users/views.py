@@ -7,7 +7,6 @@ from django.views import View
 from users.models import User
 from my_settings import MY_SECRET_KEY, MY_ALGORITHMS
 
-
 class SignUpView(View):
     def post(self, request):
         try:
@@ -52,9 +51,3 @@ class SignUpView(View):
 
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
-
-
-
-
-
-
