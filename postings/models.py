@@ -11,7 +11,7 @@ class Posting(TimeStampedModel):
     title           = models.CharField(max_length = 100)
     content         = models.TextField(null = True)
     rating          = models.IntegerField(null = True)
-
+    
     class Meta:
         db_table = 'postings'
         
