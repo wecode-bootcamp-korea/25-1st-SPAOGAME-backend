@@ -40,6 +40,4 @@ class PostingView(View):
         
         except KeyError :
             return JsonResponse({'message':'KEYERROR'}, status=400)
-    
- 
 
