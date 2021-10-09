@@ -11,6 +11,7 @@ class SignUpView(View):
     def post(self, request):
         try:
             data                = json.loads(request.body)
+            
             username            = data['username']
             password            = data['password']
             name                = data['name']
@@ -79,8 +80,3 @@ class SignInView(View):
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
         except ValueError:
             return JsonResponse({'MESSAGE':'VALUE_ERROR'}, status=400)
-        
-
-
-
-
