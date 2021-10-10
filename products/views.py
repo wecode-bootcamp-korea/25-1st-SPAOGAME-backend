@@ -5,13 +5,22 @@ from django.http      import JsonResponse
 from django.db.utils  import IntegrityError
 from django.db.models import Q
 
+from postings.models import (
+    Comment,
+    Posting
+)
+
 from products.models import (
     Category,
+    Color,
     DetailedProduct,
     Image,
     Menu,
-    Product
+    Product,
+    Size
 )
+
+from users.models    import User
 
 class MenuView(View) :
     def post(self, request) :
@@ -25,7 +34,7 @@ class MenuView(View) :
             return JsonResponse({'message':'Save Success'}, status=201)
         
         except KeyError as e : 
-            return JsonResponse({'message': f'{e}'}, status=400)
+            return JsonResponse({'message': e}, status=400)
 
     def get(self, request) :
         try :
@@ -43,10 +52,10 @@ class MenuView(View) :
             return JsonResponse({'menus':menu_lists}, status=200)
 
         except AttributeError as e :
-            return JsonResponse({'message': f'{e}'}, status=400)
+            return JsonResponse({'message': e}, status=400)
         
         except TypeError as e :
-            return JsonResponse({'message': f'{e}'}, status=400)
+            return JsonResponse({'message': e}, status=400)
 
 class CategoryView(View) :
     def post(self, request) :
@@ -62,10 +71,10 @@ class CategoryView(View) :
             ).save()
         
         except KeyError as e : 
-            return JsonResponse({'message': f'{e}'}, status=400)
+            return JsonResponse({'message': e}, status=400)
 
         except IntegrityError as e :
-            return JsonResponse({'message':f'{e}'}, status=200)
+            return JsonResponse({'message':e}, status=200)
 
     def get(self, request, menu_name) :
         try :
@@ -84,10 +93,10 @@ class CategoryView(View) :
             return JsonResponse({'categories':category_lists}, status=200)
 
         except AttributeError as e :
-            return JsonResponse({'message': f'{e}'}, status=400)
+            return JsonResponse({'message': e}, status=400)
         
         except TypeError as e :
-            return JsonResponse({'message': f'{e}'}, status=400)
+            return JsonResponse({'message': e}, status=400)
 
 class ProductView(View) :
     def post(self, request) :
@@ -118,17 +127,28 @@ class ProductView(View) :
             return JsonResponse({'message':'hihi'}, status=200)
 
         except KeyError as e : 
-            return JsonResponse({'message': f'{e}'}, status=400)
+            return JsonResponse({'message': e}, status=400)
 
         except IntegrityError as e :
-            return JsonResponse({'message':f'{e}'}, status=200)
+            return JsonResponse({'message': e}, status=200)
 
     def get(self, request, menu_name, category_name) :
         try :
 
+            #git에 올릴 때는 주석부분으로 올리기
+            
+            offset=0
+            limit=15
+            #offset = int(request.GET.get('offset',0)) 
+            #limit  = int(request.GET.get('limit', 0))
+
+            if limit-offset > 20 :
+                return JsonResponse({'message':'개수가 너무 많습니다'}, status=400)
+
             menu_id              = Menu.objects.get(name=menu_name).id
             category_id          = Category.objects.get(Q(menu_id=menu_id) & Q(name=category_name))
-            detailed_products    = DetailedProduct.objects.filter(Q(menu_id=menu_id) & Q(category_id=category_id)).values('product_id').distinct()
+
+            detailed_products    = DetailedProduct.objects.filter(Q(menu_id=menu_id) & Q(category_id=category_id)).values('product_id').distinct().order_by('product_id')[offset:offset+limit]
 
             goods = []
 
@@ -138,7 +158,18 @@ class ProductView(View) :
                 
                 for product in products :
 
-                    images = product.image_set.all()
+                    images   = product.image_set.all()
+
+                    postings = product.posting_set.all()
+                    
+                    colors   = DetailedProduct.objects.filter(product_id=product.id).values('color_id').distinct()[:4]
+                    
+                    color_list = []
+
+                    for color in colors :
+                        color_list.append(
+                            Color.objects.get(id=color['color_id']).name
+                        )
 
                     url_list = []
 
@@ -148,15 +179,110 @@ class ProductView(View) :
                         )
 
                     goods.append({
-                        'name'     : product.name,
-                        'price'    : product.price,
-                        'img_urls' : url_list 
+                        'id'           : product.id,
+                        'name'         : product.name,
+                        'price'        : product.price,
+                        'img_urls'     : url_list,
+                        'review_count' : postings.count(),
+                        'colors'       : color_list
                     })
 
             return JsonResponse({'goods':goods}, status=200)
 
         except AttributeError as e :
-            return JsonResponse({'message': f'{e}'}, status=400)
+            return JsonResponse({'message': e}, status=400)
         
         except TypeError as e :
-            return JsonResponse({'message': f'{e}'}, status=400)
+            return JsonResponse({'message': e}, status=400)
+
+class DetailProductView(View) :
+    #상품id=13
+    def get(self, request, id) :
+        try : 
+            detailed_products = DetailedProduct.objects.filter(product_id=id)
+            colors = DetailedProduct.objects.filter(product_id=id).values('color_id').distinct()[:4]
+            sizes = DetailedProduct.objects.filter(product_id=id).values('size_id').distinct()
+            posting_count = Posting.objects.filter(product_id=id).count()
+
+            goods_detail = []
+
+            for detail_info in detailed_products :
+
+                color_list   = []
+
+                for color in colors :
+                    
+                    color_list.append(
+                        Color.objects.get(id=color['color_id']).name
+                    )
+
+                sizes_list = []
+
+                for size in sizes :
+
+                    sizes_list.append(
+                        Size.objects.get(id=size['size_id']).name
+                    )
+
+                product_images = Image.objects.filter(product_id=detail_info.product_id).distinct()
+
+                image_list = []
+
+                for image in product_images :
+
+                    image_list.append(image.urls)
+
+                postings = Posting.objects.filter(product_id=id).order_by('-created_at')
+
+                posting_info = []
+                comment_info = []
+
+                for posting in postings :
+                    
+                    posting_images = Image.objects.filter(posting_id=posting.id)
+
+                    posting_image_list  = []
+
+                    for image in posting_images : 
+                        posting_image_list.append(image.urls)
+
+                    posting_info.append({
+                        "posting_id" : posting.id,
+                        "posting_writer" : User.objects.get(id=posting.user_id).name,
+                        "posting_title" : posting.title,
+                        "posting_content" : posting.content,
+                        "posting_image" : posting_image_list,
+                        "posting_date" : posting.created_at.strftime('%Y-%m-%d')
+                    })
+
+                    comments = Comment.objects.filter(posting_id=posting.id).order_by('created_at')
+
+                    for comment in comments :
+
+                        comment_info.append({
+                            "posting_id" : posting.id,
+                            "comment_id" : comment.id,
+                            "comment_writer" : User.objects.get(id=comment.user_id).name,
+                            "comment_content" : comment.content,
+                            "comment_date" : comment.created_at.strftime('%Y-%m-%d')
+                        })
+
+            goods_detail.append({
+                "product_id" : id,
+                "name" : Product.objects.get(id=id).name,
+                "price" : Product.objects.get(id=id).price,
+                "colors" : color_list,
+                "size" : sizes_list,
+                "image_list" : image_list,
+                "posting_info" : posting_info,
+                "posting_count" : posting_count,
+                "comment_info" : comment_info
+            })
+                    
+            return JsonResponse({'goods_detail':goods_detail}, status=200)
+
+        except AttributeError as e :
+            return JsonResponse({'message': e}, status=400)
+        
+        except TypeError as e :
+            return JsonResponse({'message': e}, status=400)
