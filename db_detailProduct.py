@@ -16,13 +16,12 @@ from products.models import (
 
 menu_name     = 'women'
 category_name = 'outer'
+menu_id       = Menu.objects.get(name=menu_name).id
+category_id   = Category.objects.get(menu_id=menu_id, name=category_name).id
 
-menu_id     = Menu.objects.get(name=menu_name).id
-category_id = Category.objects.get(menu_id=menu_id, name=category_name).id
-
-products = Product.objects.all()
-sizes    = Size.objects.all()
-colors   = Color.objects.all()
+products      = Product.objects.all()
+sizes         = Size.objects.all()
+colors        = Color.objects.all()
 
 for product in products :
 

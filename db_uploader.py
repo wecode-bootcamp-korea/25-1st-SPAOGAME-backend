@@ -7,7 +7,13 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "spao.settings")
 
 django.setup()
 
-from products.models import Menu, Category, Product, Color, Size
+from products.models import (
+    Menu, 
+    Category, 
+    Product, 
+    Color, 
+    Size
+)
 
 CSV_PATH_PRODUCTS = './spao_data.csv'
 
