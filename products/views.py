@@ -25,8 +25,7 @@ from users.models    import User
 class MenuView(View) :
     def post(self, request) :
         try :
-            data = json.loads(request.body)
-
+            data      = json.loads(request.body)
             menu_name = data['name']
 
             Menu.objects.create(name=menu_name)
@@ -38,8 +37,7 @@ class MenuView(View) :
 
     def get(self, request) :
         try :
-            menus = Menu.objects.all()
-
+            menus      = Menu.objects.all()
             menu_lists = []
 
             for menu in menus :
@@ -60,8 +58,7 @@ class MenuView(View) :
 class CategoryView(View) :
     def post(self, request) :
         try :
-            data = json.loads(request.body)
-
+            data    = json.loads(request.body)
             menu_id = data['menu_id']
             name    = data['name']
 
@@ -78,10 +75,8 @@ class CategoryView(View) :
 
     def get(self, request, menu_name) :
         try :
-            menu_id = Menu.objects.get(name=menu_name)
-            
-            categories = Category.objects.filter(menu_id=menu_id)
-
+            menu_id        = Menu.objects.get(name=menu_name)
+            categories     = Category.objects.filter(menu_id=menu_id)
             category_lists = []
 
             for category in categories :
@@ -101,8 +96,7 @@ class CategoryView(View) :
 class ProductView(View) :
     def post(self, request) :
         try :
-            data = json.loads(request.body)
-
+            data        = json.loads(request.body)
             name        = data['name']
             price       = data['price']
             description = data['description']
@@ -124,7 +118,7 @@ class ProductView(View) :
                         product_id = products.id
                     )
 
-            return JsonResponse({'message':'hihi'}, status=200)
+            return JsonResponse({'message':'Save Success'}, status=200)
 
         except KeyError as e : 
             return JsonResponse({'message': e}, status=400)
@@ -139,7 +133,7 @@ class ProductView(View) :
             limit  = int(request.GET.get('limit', 0))
 
             if limit-offset > 20 :
-                return JsonResponse({'message':'개수가 너무 많습니다'}, status=400)
+                return JsonResponse({'message':'too much lists'}, status=400)
 
             menu_id              = Menu.objects.get(name=menu_name).id
             category_id          = Category.objects.get(Q(menu_id=menu_id) & Q(name=category_name))
@@ -195,9 +189,9 @@ class DetailProductView(View) :
     def get(self, request, id) :
         try : 
             detailed_products = DetailedProduct.objects.filter(product_id=id)
-            colors = DetailedProduct.objects.filter(product_id=id).values('color_id').distinct()[:4]
-            sizes = DetailedProduct.objects.filter(product_id=id).values('size_id').distinct()
-            posting_count = Posting.objects.filter(product_id=id).count()
+            colors            = DetailedProduct.objects.filter(product_id=id).values('color_id').distinct()[:4]
+            sizes             = DetailedProduct.objects.filter(product_id=id).values('size_id').distinct()
+            posting_count     = Posting.objects.filter(product_id=id).count()
 
             goods_detail = []
 
@@ -242,12 +236,12 @@ class DetailProductView(View) :
                         posting_image_list.append(image.urls)
 
                     posting_info.append({
-                        "posting_id" : posting.id,
-                        "posting_writer" : User.objects.get(id=posting.user_id).name,
-                        "posting_title" : posting.title,
+                        "posting_id"      : posting.id,
+                        "posting_writer"  : User.objects.get(id=posting.user_id).name,
+                        "posting_title"   : posting.title,
                         "posting_content" : posting.content,
-                        "posting_image" : posting_image_list,
-                        "posting_date" : posting.created_at.strftime('%Y-%m-%d')
+                        "posting_image"   : posting_image_list,
+                        "posting_date"    : posting.created_at.strftime('%Y-%m-%d')
                     })
 
                     comments = Comment.objects.filter(posting_id=posting.id).order_by('created_at')
@@ -255,23 +249,23 @@ class DetailProductView(View) :
                     for comment in comments :
 
                         comment_info.append({
-                            "posting_id" : posting.id,
-                            "comment_id" : comment.id,
-                            "comment_writer" : User.objects.get(id=comment.user_id).name,
+                            "posting_id"      : posting.id,
+                            "comment_id"      : comment.id,
+                            "comment_writer"  : User.objects.get(id=comment.user_id).name,
                             "comment_content" : comment.content,
-                            "comment_date" : comment.created_at.strftime('%Y-%m-%d')
+                            "comment_date"    : comment.created_at.strftime('%Y-%m-%d')
                         })
 
             goods_detail.append({
-                "product_id" : id,
-                "name" : Product.objects.get(id=id).name,
-                "price" : Product.objects.get(id=id).price,
-                "colors" : color_list,
-                "size" : sizes_list,
-                "image_list" : image_list,
-                "posting_info" : posting_info,
+                "product_id"    : id,
+                "name"          : Product.objects.get(id=id).name,
+                "price"         : Product.objects.get(id=id).price,
+                "colors"        : color_list,
+                "size"          : sizes_list,
+                "image_list"    : image_list,
+                "posting_info"  : posting_info,
                 "posting_count" : posting_count,
-                "comment_info" : comment_info
+                "comment_info"  : comment_info
             })
                     
             return JsonResponse({'goods_detail':goods_detail}, status=200)
