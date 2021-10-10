@@ -66,7 +66,9 @@ class CategoryView(View) :
                 menu_id = menu_id,
                 name    = name
             ).save()
-        
+
+            return JsonResponse({'message':"Save Success"})
+
         except KeyError as e : 
             return JsonResponse({'message': e}, status=400)
 
@@ -101,6 +103,7 @@ class ProductView(View) :
             price       = data['price']
             description = data['description']
             quantity    = data['quantity']
+            img_url     = data.get('img_url', None)
 
             products = Product.objects.create(
                 name        = name,
@@ -109,8 +112,8 @@ class ProductView(View) :
                 quantity    = quantity
             )
             
-            if data['img_url'] :
-                img_urls = data['img_url'] 
+            if img_url :
+                img_urls = img_url
 
                 for url in img_urls :
                     Image.objects.create(
