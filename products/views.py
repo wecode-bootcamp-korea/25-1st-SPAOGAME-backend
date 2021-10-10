@@ -128,7 +128,6 @@ class ProductView(View) :
 
     def get(self, request, menu_name, category_name) :
         try :
-
             offset = int(request.GET.get('offset',0)) 
             limit  = int(request.GET.get('limit', 0))
 
@@ -137,9 +136,7 @@ class ProductView(View) :
 
             menu_id              = Menu.objects.get(name=menu_name).id
             category_id          = Category.objects.get(Q(menu_id=menu_id) & Q(name=category_name))
-
             detailed_products    = DetailedProduct.objects.filter(Q(menu_id=menu_id) & Q(category_id=category_id)).values('product_id').distinct().order_by('product_id')[offset:offset+limit]
-
             goods = []
 
             for detailed_product in detailed_products :
@@ -192,7 +189,6 @@ class DetailProductView(View) :
             colors            = DetailedProduct.objects.filter(product_id=id).values('color_id').distinct()[:4]
             sizes             = DetailedProduct.objects.filter(product_id=id).values('size_id').distinct()
             posting_count     = Posting.objects.filter(product_id=id).count()
-
             goods_detail = []
 
             for detail_info in detailed_products :
