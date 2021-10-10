@@ -135,12 +135,8 @@ class ProductView(View) :
     def get(self, request, menu_name, category_name) :
         try :
 
-            #git에 올릴 때는 주석부분으로 올리기
-            
-            offset=0
-            limit=15
-            #offset = int(request.GET.get('offset',0)) 
-            #limit  = int(request.GET.get('limit', 0))
+            offset = int(request.GET.get('offset',0)) 
+            limit  = int(request.GET.get('limit', 0))
 
             if limit-offset > 20 :
                 return JsonResponse({'message':'개수가 너무 많습니다'}, status=400)
@@ -196,7 +192,6 @@ class ProductView(View) :
             return JsonResponse({'message': e}, status=400)
 
 class DetailProductView(View) :
-    #상품id=13
     def get(self, request, id) :
         try : 
             detailed_products = DetailedProduct.objects.filter(product_id=id)
