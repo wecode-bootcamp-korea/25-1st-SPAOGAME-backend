@@ -4,7 +4,7 @@ import bcrypt, jwt
 from django.http import JsonResponse
 from django.views import View
 
-from users.models import User
+from users.models import Gender, User
 from my_settings import MY_SECRET_KEY, MY_ALGORITHMS
 
 class SignUpView(View):
@@ -46,12 +46,12 @@ class SignUpView(View):
                 address1            = data['address1'],
                 address2            = data['address2'],
                 birthday            = data['birthday'],
-                gender              = data['gender']
+                gender              = Gender.objects.get(id=gender)
             )
             return JsonResponse({'MESSAGE':'SUCCESS'}, status=201)
 
-        except KeyError:
-            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+        except KeyError as e:
+            return JsonResponse({'MESSAGE': f'{e}'}, status=400)
 
 class SignInView(View):
     def post(self, request):
