@@ -8,7 +8,7 @@ from users.models import User
 from products.models import  Image, Product
 from django.shortcuts import render
 from users.decorators import login_decorator
-
+from django.db import transaction 
 
 class PostingView(View):
     @login_decorator
@@ -16,25 +16,26 @@ class PostingView(View):
         try:
             data        = json.loads(request.body)
          
-            user_id     = data['user_id']
+            user_id     = request.user.id
             content     = data['content']
             title       = data.get('title',None)
             product_id  = data['product_id']
             urls        = data.get('urls',None)
         
-            posting = Posting.objects.create(
-                user_id    = User.objects.get(id = request.user.id),
-                content    = content,
-                title      = title,
-                product_id = product_id
-            )
-            
-            if urls :
-                for image_url in urls :
-                    Image.objects.create(
-                        image_url = image_url,
-                        posting   = posting
-                    ) 
+            with transaction.atomic():
+                posting = Posting.objects.create(
+                    user_id    = user_id,
+                    content    = content,
+                    title      = title,
+                    product_id = product_id
+                )
+                
+                if urls :
+                    for image_url in urls :
+                        Image.objects.create(
+                            urls         = image_url,
+                            posting_id   = posting.id
+                        ) 
             return JsonResponse({'message' : 'SUCCESS'}, status=201)
         
         except JSONDecodeError:
@@ -50,8 +51,9 @@ class CommentView(View):
                 data=json.loads(request.body)
                 user = request.user
                 
-                content = data.get('content', None)
-                posting_id = data.get('posting_id', None)
+                content = data['content']
+                posting_id = data['posting_id']
+                user_id = user.id
                 
                 if not (content and posting_id):
                     return JsonResponse({'message':'KEY-ERROR'}, status=400)
@@ -63,8 +65,8 @@ class CommentView(View):
             
                 Comment.objects.create(
                     content = content,
-                    user = user,
-                    posting = posting
+                    user_id = user_id,
+                    posting_id = posting.id
                 )
                 
                 return JsonResponse({'message':'SUCCESS'}, status=200)

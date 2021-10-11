@@ -4,7 +4,6 @@ from users.models    import User
 from core.models     import TimeStampedModel
 from products.models import Product
 
-
 class Posting(TimeStampedModel):
     user            = models.ForeignKey('users.User', on_delete=models.CASCADE)
     product         = models.ForeignKey('products.Product', on_delete=models.CASCADE)
