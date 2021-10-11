@@ -22,7 +22,7 @@ class Product(TimeStampedModel) :
     price       = models.IntegerField()
     description = models.TextField()
     quantity    = models.IntegerField()
-    thumbnail   = models.CharField(max_length=700)
+    thumbnail_image_url   = models.CharField(max_length=700)
 
     class Meta :
         db_table = 'products'

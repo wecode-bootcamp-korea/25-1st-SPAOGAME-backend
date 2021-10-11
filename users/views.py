@@ -50,10 +50,13 @@ class SignUpView(View):
             )
             return JsonResponse({'MESSAGE':'SUCCESS'}, status=201)
 
+        except ValueError:
+            return JsonResponse({'MESSAGE':'VALUE_ERROR'}, status=400)
+
         except KeyError as e:
             return JsonResponse({'MESSAGE':f'{e}'}, status=400)
         
-        except json.decoder.JSONDecodeError :
+        except json.decoder.JSONDecodeError:
             return JsonResponse({'message':'JSONDecodeError'}, status=400)
 
 class SignInView(View):
@@ -79,7 +82,7 @@ class SignInView(View):
             
             return JsonResponse({'MESSAGE':'SUCCESS', 'TOKEN' : token}, status=200)
 
-        except KeyError:
-            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+        except KeyError as e:
+            return JsonResponse({'MESSAGE':f'{e}'+', KEY_ERROR'}, status=400)
         except ValueError:
             return JsonResponse({'MESSAGE':'VALUE_ERROR'}, status=400)
