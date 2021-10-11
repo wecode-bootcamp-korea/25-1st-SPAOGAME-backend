@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.views import View
 
 from users.models import User, Gender
-from my_settings import MY_SECRET_KEY, MY_ALGORITHMS
+from spao.settings import SECRET_KEY, ALGORITHMS
 
 class SignUpView(View):
     def post(self, request):
@@ -22,7 +22,7 @@ class SignUpView(View):
             birthday            = data['birthday']
             gender              = data.get['gender',None]
 
-            email_validation    = re.compile("^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+            email_validation    = re.compile("^[a-zA-Z0-9+-_]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
             password_validation = re.compile("^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%*^&+=]).*$")
 
             if not email_validation.match(email):
@@ -72,7 +72,7 @@ class SignInView(View):
             if not bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
                 return JsonResponse({'MESSAGE':'INVALID_USER'}, status=401)
 
-            token = jwt.encode({'id' : user.id}, MY_SECRET_KEY, MY_ALGORITHMS)
+            token = jwt.encode({'id' : user.id}, SECRET_KEY, ALGORITHMS)
             
             return JsonResponse({'MESSAGE':'SUCCESS', 'TOKEN' : token}, status=200)
 
