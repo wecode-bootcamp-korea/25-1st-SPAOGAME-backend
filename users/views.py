@@ -3,6 +3,7 @@ import bcrypt, jwt
 
 from django.http import JsonResponse
 from django.views import View
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from users.models import User, Gender
 from spao.settings import SECRET_KEY, ALGORITHMS
@@ -50,12 +51,21 @@ class SignUpView(View):
             )
             return JsonResponse({'MESSAGE':'SUCCESS'}, status=201)
 
+        except MultipleObjectsReturned:
+            return JsonResponse({'MESSAGE':'MULTIPLE_OBJECTS'}, status=400)
+
+        except ObjectDoesNotExist:
+            return JsonResponse({'MESSAGE':'OBJECT_NOT_EXITST'}, status=400)
+
         except ValueError:
             return JsonResponse({'MESSAGE':'VALUE_ERROR'}, status=400)
 
-        except KeyError as e:
-            return JsonResponse({'MESSAGE':f'{e}'}, status=400)
-        
+        except KeyError:
+            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+
+        except TypeError as e :
+            return JsonResponse({'message': e}, status=400)        
+
         except json.decoder.JSONDecodeError:
             return JsonResponse({'message':'JSONDecodeError'}, status=400)
 
@@ -82,7 +92,11 @@ class SignInView(View):
             
             return JsonResponse({'MESSAGE':'SUCCESS', 'TOKEN' : token}, status=200)
 
-        except KeyError as e:
-            return JsonResponse({'MESSAGE':f'{e}'+', KEY_ERROR'}, status=400)
+        except KeyError:
+            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+        
+        except TypeError as e :
+            return JsonResponse({'message': e}, status=400)
+        
         except ValueError:
             return JsonResponse({'MESSAGE':'VALUE_ERROR'}, status=400)
