@@ -4,7 +4,7 @@ import bcrypt, jwt
 from django.http import JsonResponse
 from django.views import View
 
-from users.models import User
+from users.models import User, Gender
 from my_settings import MY_SECRET_KEY, MY_ALGORITHMS
 
 class SignUpView(View):
@@ -18,9 +18,9 @@ class SignUpView(View):
             email               = data['email']
             mobile_number       = data['mobile_number']
             address1            = data['address1']
-            address2            = data['address2']
+            address2            = data.get['address2',None]
             birthday            = data['birthday']
-            gender              = data['gender']
+            gender              = data.get['gender',None]
 
             email_validation    = re.compile("^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
             password_validation = re.compile("^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%*^&+=]).*$")
@@ -38,15 +38,15 @@ class SignUpView(View):
             decoded_hashed_password = hashed_password.decode('utf-8')
 
             User.objects.create(
-                username            = data['username'],
+                username            = username,
                 password            = decoded_hashed_password,
-                name                = data['name'],
-                email               = data['email'],
-                mobile_number       = data['mobile_number'],
-                address1            = data['address1'],
-                address2            = data['address2'],
-                birthday            = data['birthday'],
-                gender              = data['gender']
+                name                = name,
+                email               = email,
+                mobile_number       = mobile_number,
+                address1            = address1,
+                address2            = address2,
+                birthday            = birthday,
+                gender              = Gender.objects.get(id=gender)
             )
             return JsonResponse({'MESSAGE':'SUCCESS'}, status=201)
 
