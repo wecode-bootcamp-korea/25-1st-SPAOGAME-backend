@@ -14,8 +14,8 @@ class PostingView(View):
             data        = json.loads(request.body)
         
             user_id     = data['user_id']
-            content     = data['content']
-            title       = data.get('title',None)
+            content     = data.get('content',None)
+            title       = data['title']
             product_id  = data['product_id']
             urls        = data.get('urls',None)
         
@@ -40,4 +40,3 @@ class PostingView(View):
         
         except KeyError :
             return JsonResponse({'message':'KEYERROR'}, status=400)
-
