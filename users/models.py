@@ -13,7 +13,7 @@ class User(TimeStampedModel) :
     password        = models.CharField(max_length=200)
     name            = models.CharField(max_length=100)
     email           = models.CharField(max_length=200, unique=True)
-    mobile_number   = models.CharField(max_length=200)
+    mobile_number   = models.CharField(max_length=20)
     address1        = models.CharField(max_length=450)
     address2        = models.CharField(max_length=450, null=True)
     birthday        = models.DateField()

@@ -18,9 +18,9 @@ class SignUpView(View):
             email               = data['email']
             mobile_number       = data['mobile_number']
             address1            = data['address1']
-            address2            = data.get['address2',None]
+            address2            = data['address2']
             birthday            = data['birthday']
-            gender              = data.get['gender',None]
+            gender              = data['gender']
 
             email_validation    = re.compile("^[a-zA-Z0-9+-_]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
             password_validation = re.compile("^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%*^&+=]).*$")
@@ -50,8 +50,11 @@ class SignUpView(View):
             )
             return JsonResponse({'MESSAGE':'SUCCESS'}, status=201)
 
-        except KeyError:
-            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+        except KeyError as e:
+            return JsonResponse({'MESSAGE':f'{e}'}, status=400)
+        
+        except json.decoder.JSONDecodeError :
+            return JsonResponse({'message':'JSONDecodeError'}, status=400)
 
 class SignInView(View):
     def post(self, request):

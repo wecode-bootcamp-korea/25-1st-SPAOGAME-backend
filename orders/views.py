@@ -18,10 +18,10 @@ class CartView(View):
             if not Product.objects.filter(id=product_id).exists():
                 return JsonResponse({"MESSAGE":"DOES_NOT_EXIST_ERROR"}, status=400)
 
-            if Cart.objects.filter(product_id=product_id).exists():
+            if Basket.objects.filter(product_id=product_id).exists():
                 return JsonResponse({"MESSAGE":"ALREADY_EXIST"}, status=400)
 
-            Cart.objects.create(
+            Basket.objects.create(
                 user       = request.user,
                 product_id = product_id,
                 quantity   = quantity,

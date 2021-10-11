@@ -16,10 +16,13 @@ class Category(TimeStampedModel) :
         db_table = 'categories'
 
 class Product(TimeStampedModel) :
+    menu        = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    category    = models.ForeignKey(Category, on_delete=models.CASCADE)
     name        = models.CharField(max_length =50)
     price       = models.IntegerField()
     description = models.TextField()
     quantity    = models.IntegerField()
+    thumbnail   = models.CharField(max_length=700)
 
     class Meta :
         db_table = 'products'
@@ -45,11 +48,9 @@ class Image(TimeStampedModel) :
         db_table = 'images'
 
 class DetailedProduct(TimeStampedModel) :
-    menu         = models.ForeignKey(Menu, on_delete=models.CASCADE)
-    category     = models.ForeignKey(Category, on_delete=models.CASCADE)
     color        = models.ForeignKey(Color, on_delete=models.CASCADE)
     size         = models.ForeignKey(Size, on_delete=models.CASCADE)
     product      = models.ForeignKey(Product, on_delete=models.CASCADE)
-
+    
     class Meta : 
         db_table = 'detailed_products'
