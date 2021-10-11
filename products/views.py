@@ -96,7 +96,7 @@ class ProductView(View) :
             img_urls    = data['img_urls']
 
             with transaction.atomic() :
-                products = Product.objects.create(
+                product = Product.objects.create(
                     menu_id     = menu_id,
                     category_id = category_id,
                     name        = name,
@@ -109,7 +109,7 @@ class ProductView(View) :
                 for url in img_urls :
                     Image.objects.create(
                         urls       = url,
-                        product_id = products.id
+                        product_id = product.id
                 )
 
             return JsonResponse({'message':'Save Success'}, status=200)
