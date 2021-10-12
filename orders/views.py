@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views import View
 
 from orders.models import Basket
-from products.models import Product
+from products.models import Product,DetailedProduct
 from users.decorators import login_decorator
 
 class CartView(View):
@@ -31,3 +31,18 @@ class CartView(View):
 
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+
+    @login_decorator
+    def get(self, request):
+        carts = Basket.objects.select_related("product","product__name").filter(user_id=request.user).prefetch_related("product__images")
+        Result = [{
+            "Basket_id"       : Basket.id,
+            "user_name"     : Basket.user.name,
+            "product_id"    : Basket.product.id, 
+            "product_name"  : Basket.detailedproduct.name, 
+            "quantity"      : Basket.quantity,
+            "product_price" : Basket.product.price, 
+            "image_url"     : Basket.product.images.first().image_url
+            }for cart in carts]
+        
+        return JsonResponse({'Result' : Result}, status=200)
