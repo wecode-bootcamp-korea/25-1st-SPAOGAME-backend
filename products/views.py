@@ -97,20 +97,18 @@ class ProductView(View) :
 
             with transaction.atomic() :
                 product = Product.objects.create(
-                    menu_id     = menu_id,
-                    category_id = category_id,
-                    name        = name,
-                    price       = price,
-                    description = description,
-                    quantity    = quantity,
-                    thumb_url   = thumb_url
+                    menu_id             = menu_id,
+                    category_id         = category_id,
+                    name                = name,
+                    price               = price,
+                    description         = description,
+                    quantity            = quantity,
+                    thumbnail_image_url = thumb_url
                 )
 
-                for url in img_urls :
-                    Image.objects.create(
-                        urls       = url,
-                        product_id = product.id
-                )
+                urls = [Image(urls=url, product_id=product.id) for url in img_urls]
+
+                Image.objects.bulk_create(urls)
 
             return JsonResponse({'message':'Save Success'}, status=200)
 
