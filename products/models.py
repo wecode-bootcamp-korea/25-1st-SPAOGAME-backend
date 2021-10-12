@@ -16,13 +16,13 @@ class Category(TimeStampedModel) :
         db_table = 'categories'
 
 class Product(TimeStampedModel) :
-    menu        = models.ForeignKey(Menu, on_delete=models.CASCADE)
-    category    = models.ForeignKey(Category, on_delete=models.CASCADE)
-    name        = models.CharField(max_length =50)
-    price       = models.IntegerField()
-    description = models.TextField()
-    quantity    = models.IntegerField()
-    thumbnail_image_url   = models.CharField(max_length=700)
+    menu                    = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    category                = models.ForeignKey(Category, on_delete=models.CASCADE)
+    name                    = models.CharField(max_length =50)
+    price                   = models.IntegerField()
+    description             = models.TextField()
+    quantity                = models.IntegerField()
+    thumbnail_image_url     = models.CharField(max_length=700)
 
     class Meta :
         db_table = 'products'
