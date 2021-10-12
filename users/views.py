@@ -3,10 +3,11 @@ import bcrypt, jwt
 
 from django.http import JsonResponse
 from django.views import View
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
-from users.models import User,Gender
-from my_settings import MY_SECRET_KEY, MY_ALGORITHMS
+from users.models import User, Gender
 from spao.settings import SECRET_KEY, ALGORITHMS
+
 class SignUpView(View):
     def post(self, request):
         try:
@@ -38,20 +39,36 @@ class SignUpView(View):
             decoded_hashed_password = hashed_password.decode('utf-8')
 
             User.objects.create(
-                username            = data['username'],
+                username            = username,
                 password            = decoded_hashed_password,
-                name                = data['name'],
-                email               = data['email'],
-                mobile_number       = data['mobile_number'],
-                address1            = data['address1'],
-                address2            = data['address2'],
-                birthday            = data['birthday'],
+                name                = name,
+                email               = email,
+                mobile_number       = mobile_number,
+                address1            = address1,
+                address2            = address2,
+                birthday            = birthday,
                 gender              = Gender.objects.get(id=gender)
             )
             return JsonResponse({'MESSAGE':'SUCCESS'}, status=201)
 
-        except KeyError as e:
-            return JsonResponse({'MESSAGE':f'{e}'}, status=400)
+
+        except MultipleObjectsReturned:
+            return JsonResponse({'MESSAGE':'MULTIPLE_OBJECTS'}, status=400)
+
+        except ObjectDoesNotExist:
+            return JsonResponse({'MESSAGE':'OBJECT_NOT_EXITST'}, status=400)
+
+        except ValueError:
+            return JsonResponse({'MESSAGE':'VALUE_ERROR'}, status=400)
+
+        except KeyError:
+            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+        
+        except TypeError as e :
+            return JsonResponse({'message': e}, status=400)        
+
+        except json.decoder.JSONDecodeError:
+            return JsonResponse({'message':'JSONDecodeError'}, status=400)
 
 class SignInView(View):
     def post(self, request):
@@ -79,6 +96,10 @@ class SignInView(View):
 
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+        
+        except TypeError as e :
+            return JsonResponse({'message': e}, status=400)
+        
         except ValueError:
             return JsonResponse({'MESSAGE':'VALUE_ERROR'}, status=400)
         
