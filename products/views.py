@@ -133,19 +133,15 @@ class ProductView(View) :
             category_id = Category.objects.get(menu_id=menu_id, name=category_name)
             products    = Product.objects.filter(menu_id=menu_id, category_id=category_id)[offset:offset+limit]
 
-            for product in products :
-
-                postings = product.posting_set.all()
-
-                goods.append({
-                    'id'           : product.id,
-                    'name'         : product.name,
-                    'price'        : product.price,
-                    'img_urls'     : product.thumbnail,
-                    'review_count' : postings.count(),
-                    'colors'       : [Color.objects.get(id=color['color_id']).name for color 
-                    in DetailedProduct.objects.filter(product_id=product.id).values('color_id').distinct()[:4] ]
-                })
+            goods = [{
+                'id'           : product.id,
+                'name'         : product.name,
+                'price'        : product.price,
+                'img_urls'     : product.thumbnail_image_url,
+                'review_count' : product.posting_set.all().count(),
+                'colors'       : [Color.objects.get(id=color['color_id']).name for color 
+                in DetailedProduct.objects.filter(product_id=product.id).values('color_id').distinct()[:4] ]
+            } for product in products ]
 
             return JsonResponse({'goods':goods}, status=200)
 
@@ -174,25 +170,21 @@ class DetailProductView(View) :
                 posting_info = []
                 postings     = Posting.objects.filter(product_id=product.product_id).order_by('-created_at')
 
-                for posting in postings :
-
-                    comments = Comment.objects.filter(posting=posting.id).order_by('created_at')
-                    
-                    posting_info.append({
+                posting_info = [{
+                    "posting_id"      : posting.id,
+                    "posting_writer"  : User.objects.get(id=posting.user_id).name,
+                    "posting_title"   : posting.title,
+                    "posting_content" : posting.content,
+                    "posting_image"   : [image.urls for image in Image.objects.filter(posting_id=posting.id)],
+                    "posting_date"    : posting.created_at.strftime('%Y-%m-%d'),
+                    "comment_info"    : [{
                         "posting_id"      : posting.id,
-                        "posting_writer"  : User.objects.get(id=posting.user_id).name,
-                        "posting_title"   : posting.title,
-                        "posting_content" : posting.content,
-                        "posting_image"   : [image.urls for image in Image.objects.filter(posting_id=posting.id)],
-                        "posting_date"    : posting.created_at.strftime('%Y-%m-%d'),
-                        "comment_info"    : [{
-                            "posting_id"      : posting.id,
-                            "comment_id"      : comment.id,
-                            "comment_writer"  : User.objects.get(id=comment.user_id).name,
-                            "comment_content" : comment.content,
-                            "comment_date"    : comment.created_at.strftime('%Y-%m-%d')
-                        } for comment in comments]
-                    })
+                        "comment_id"      : comment.id,
+                        "comment_writer"  : User.objects.get(id=comment.user_id).name,
+                        "comment_content" : comment.content,
+                        "comment_date"    : comment.created_at.strftime('%Y-%m-%d')
+                    } for comment in Comment.objects.filter(posting=posting.id).order_by('created_at')]
+                } for posting in postings]
 
             goods_detail = [{
                 "product_id"    : id,
