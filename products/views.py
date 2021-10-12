@@ -203,7 +203,6 @@ class DetailProductView(View) :
                 "image_list"    : image_list,
                 "posting_info"  : posting_info,
                 "posting_count" : posting_count,
-               # "comment_info"  : comment_info
             }]
                     
             return JsonResponse({'goods_detail':goods_detail}, status=200)
