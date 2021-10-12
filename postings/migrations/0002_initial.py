@@ -9,9 +9,10 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('postings', '0001_initial'),
-        ('products', '0001_initial'),
+
         ('users', '0001_initial'),
+        ('postings', '0001_initial'),
+        ('products', '0001_initial'), 
     ]
 
     operations = [
@@ -29,11 +30,6 @@ class Migration(migrations.Migration):
             model_name='comment',
             name='posting',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='postings.posting'),
-        ),
-        migrations.AddField(
-            model_name='comment',
-            name='product',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.product'),
         ),
         migrations.AddField(
             model_name='comment',
