@@ -175,6 +175,8 @@ class DetailProductView(View) :
                 postings     = Posting.objects.filter(product_id=product.product_id).order_by('-created_at')
 
                 for posting in postings :
+
+                    comments = Comment.objects.filter(posting=posting.id).order_by('created_at')
                     
                     posting_info.append({
                         "posting_id"      : posting.id,
@@ -182,19 +184,16 @@ class DetailProductView(View) :
                         "posting_title"   : posting.title,
                         "posting_content" : posting.content,
                         "posting_image"   : [image.urls for image in Image.objects.filter(posting_id=posting.id)],
-                        "posting_date"    : posting.created_at.strftime('%Y-%m-%d')
+                        "posting_date"    : posting.created_at.strftime('%Y-%m-%d'),
+                        "comment_info"    : [{
+                            "posting_id"      : posting.id,
+                            "comment_id"      : comment.id,
+                            "comment_writer"  : User.objects.get(id=comment.user_id).name,
+                            "comment_content" : comment.content,
+                            "comment_date"    : comment.created_at.strftime('%Y-%m-%d')
+                        } for comment in comments]
                     })
 
-                    comments = Comment.objects.filter(posting=posting.id).order_by('created_at')
-                         
-                    comment_info = [{
-                        "posting_id"      : posting.id,
-                        "comment_id"      : comment.id,
-                        "comment_writer"  : User.objects.get(id=comment.user_id).name,
-                        "comment_content" : comment.content,
-                        "comment_date"    : comment.created_at.strftime('%Y-%m-%d')
-                    } for comment in comments]
-        
             goods_detail = [{
                 "product_id"    : id,
                 "name"          : product_name,
@@ -204,7 +203,7 @@ class DetailProductView(View) :
                 "image_list"    : image_list,
                 "posting_info"  : posting_info,
                 "posting_count" : posting_count,
-                "comment_info"  : comment_info
+               # "comment_info"  : comment_info
             }]
                     
             return JsonResponse({'goods_detail':goods_detail}, status=200)
