@@ -48,28 +48,28 @@ class CommentView(View):
     @login_decorator
     def post(self, request):
             try:
-                data=json.loads(request.body)
-                user = request.user
+                data        = json.loads(request.body)
+                user        = request.user
                 
-                content = data['content']
-                posting_id = data['posting_id']
-                user_id = user.id
+                content     = data['content']
+                posting_id  = data['posting_id']
+                user_id     = user.id
                 
                 if not (content and posting_id):
                     return JsonResponse({'message':'KEY-ERROR'}, status=400)
                 
-                if not Posting.objects.filter(id=posting_id).exists():
-                    return JsonResponse({'message':"POSTING-DOES-NOT-EXIST"}, status=404)
+                if not Posting.objects.filter(id = posting_id).exists():
+                    return JsonResponse({'message' : "POSTING-DOES-NOT-EXIST"}, status=404)
                 
-                posting = Posting.objects.get(id=posting_id)
+                posting = Posting.objects.get(id = posting_id)
             
                 Comment.objects.create(
-                    content = content,
-                    user_id = user_id,
+                    content    = content,
+                    user_id    = user_id,
                     posting_id = posting.id
                 )
                 
-                return JsonResponse({'message':'SUCCESS'}, status=200)
+                return JsonResponse({'message' : 'SUCCESS'}, status=200)
             
             except JSONDecodeError:
-                return JsonResponse({'message':'JSON_DECODE_ERROR'}, status=400)
+                return JsonResponse({'message' : 'JSON_DECODE_ERROR'}, status=400)
