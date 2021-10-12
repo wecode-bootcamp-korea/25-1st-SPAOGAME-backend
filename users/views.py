@@ -92,11 +92,11 @@ class SignInView(View):
             
             return JsonResponse({'MESSAGE':'SUCCESS', 'TOKEN' : token}, status=200)
 
-        except KeyError:
-            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+        except KeyError as e:
+            return JsonResponse({'MESSAGE':f'{e}'+'_KEY_ERROR'}, status=400)
         
         except TypeError as e :
-            return JsonResponse({'message': e}, status=400)
+            return JsonResponse({'message': f'{e}'}, status=400)
         
         except ValueError:
             return JsonResponse({'MESSAGE':'VALUE_ERROR'}, status=400)
