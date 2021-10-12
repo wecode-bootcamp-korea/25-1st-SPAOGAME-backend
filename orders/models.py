@@ -10,8 +10,9 @@ class Wishlist(TimeStampedModel) :
         db_table = 'wishlists'
 
 class Basket(TimeStampedModel) :
-    user    = models.ForeignKey('users.User', on_delete=models.CASCADE)
-    product = models.ForeignKey('products.DetailedProduct', on_delete=models.CASCADE)
+    user        = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    product     = models.ForeignKey('products.DetailedProduct', on_delete=models.CASCADE)  
+    quantity    = models.IntegerField(default=1)
 
     class Meta :
         db_table = 'baskets'

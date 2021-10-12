@@ -3,9 +3,10 @@ import bcrypt, jwt
 
 from django.http import JsonResponse
 from django.views import View
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
-from users.models import User
-from my_settings import MY_SECRET_KEY, MY_ALGORITHMS
+from users.models import User, Gender
+from spao.settings import SECRET_KEY, ALGORITHMS
 
 class SignUpView(View):
     def post(self, request):
@@ -22,7 +23,7 @@ class SignUpView(View):
             birthday            = data['birthday']
             gender              = data['gender']
 
-            email_validation    = re.compile("^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+            email_validation    = re.compile("^[a-zA-Z0-9+-_]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
             password_validation = re.compile("^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%*^&+=]).*$")
 
             if not email_validation.match(email):
@@ -38,20 +39,35 @@ class SignUpView(View):
             decoded_hashed_password = hashed_password.decode('utf-8')
 
             User.objects.create(
-                username            = data['username'],
+                username            = username,
                 password            = decoded_hashed_password,
-                name                = data['name'],
-                email               = data['email'],
-                mobile_number       = data['mobile_number'],
-                address1            = data['address1'],
-                address2            = data['address2'],
-                birthday            = data['birthday'],
-                gender              = data['gender']
+                name                = name,
+                email               = email,
+                mobile_number       = mobile_number,
+                address1            = address1,
+                address2            = address2,
+                birthday            = birthday,
+                gender              = Gender.objects.get(id=gender)
             )
             return JsonResponse({'MESSAGE':'SUCCESS'}, status=201)
 
+        except MultipleObjectsReturned:
+            return JsonResponse({'MESSAGE':'MULTIPLE_OBJECTS'}, status=400)
+
+        except ObjectDoesNotExist:
+            return JsonResponse({'MESSAGE':'OBJECT_NOT_EXITST'}, status=400)
+
+        except ValueError:
+            return JsonResponse({'MESSAGE':'VALUE_ERROR'}, status=400)
+
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+
+        except TypeError as e :
+            return JsonResponse({'message': e}, status=400)        
+
+        except json.decoder.JSONDecodeError:
+            return JsonResponse({'message':'JSONDecodeError'}, status=400)
 
 class SignInView(View):
     def post(self, request):
@@ -72,11 +88,15 @@ class SignInView(View):
             if not bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
                 return JsonResponse({'MESSAGE':'INVALID_USER'}, status=401)
 
-            token = jwt.encode({'id' : user.id}, MY_SECRET_KEY, MY_ALGORITHMS)
+            token = jwt.encode({'id' : user.id}, SECRET_KEY, ALGORITHMS)
             
             return JsonResponse({'MESSAGE':'SUCCESS', 'TOKEN' : token}, status=200)
 
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+        
+        except TypeError as e :
+            return JsonResponse({'message': e}, status=400)
+        
         except ValueError:
             return JsonResponse({'MESSAGE':'VALUE_ERROR'}, status=400)
