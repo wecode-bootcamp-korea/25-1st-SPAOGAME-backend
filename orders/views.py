@@ -15,7 +15,7 @@ class CartView(View):
             detailed_product_id = data['product_id']
             quantity   = data['quantity']
 
-            if not Product.objects.filter(id=detailed_product_id).exists():
+            if not DetailedProduct.objects.filter(id=detailed_product_id).exists():
                 return JsonResponse({"MESSAGE":"DOES_NOT_EXIST"}, status=400)
 
             if Basket.objects.filter(product_id=detailed_product_id).exists():
@@ -31,18 +31,3 @@ class CartView(View):
 
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
-
-    @login_decorator
-    def get(self, request):
-        carts = Basket.objects.select_related("product","product__name").filter(user_id=request.user).prefetch_related("product__images")
-        Result = [{
-            "Basket_id"       : Basket.id,
-            "user_name"     : Basket.user.name,
-            "product_id"    : Basket.product.id, 
-            "product_name"  : Basket.detailedproduct.name, 
-            "quantity"      : Basket.quantity,
-            "product_price" : Basket.product.price, 
-            "image_url"     : Basket.product.images.first().image_url
-            }for cart in carts]
-        
-        return JsonResponse({'Result' : Result}, status=200)
