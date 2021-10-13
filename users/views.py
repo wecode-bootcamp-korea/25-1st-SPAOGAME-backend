@@ -21,7 +21,7 @@ class SignUpView(View):
             address1            = data['address1']
             address2            = data.get('address2',None)
             birthday            = data['birthday']
-            gender              = data['gender']
+            gender              = data['gender']w
 
             email_validation    = re.compile("^[a-zA-Z0-9+-_]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
             password_validation = re.compile("^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%*^&+=]).*$")
