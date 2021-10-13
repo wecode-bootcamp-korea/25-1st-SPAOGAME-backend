@@ -32,6 +32,9 @@ class SignUpView(View):
             if not email_validation.match(email):
                 return JsonResponse({"MESSAGE":"EMAIL_VALIDATION_ERROR"}, status=400)
 
+            if User.objects.filter(username=username).exists():
+                return JsonResponse({"MESSAGE":"USERNAME_ALREADY_EXITST"}, status=409)
+                            
             if User.objects.filter(email=email).exists():
                 return JsonResponse({"MESSAGE":"DUPLICATION_ERROR"}, status=400)
 
