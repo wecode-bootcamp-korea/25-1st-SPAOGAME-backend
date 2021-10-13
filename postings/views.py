@@ -30,7 +30,7 @@ class PostingView(View):
                     product_id = product_id
                 )
                     
-                Image.objects.bulk_create([Image(urls=image_url, product_id=product_id) for image_url in urls])
+            Image.objects.bulk_create([Image(urls=image_url, product_id=product_id) for image_url in urls])
         
             return JsonResponse({'message' : 'SUCCESS'}, status=201)
         
@@ -52,18 +52,19 @@ class CommentView(View):
                 user_id     = user.id
                 
                 if not (content and posting_id):
-                    return JsonResponse({'message':'KEY-ERROR'}, status=400)
+                    return JsonResponse({'message' : 'KEY-ERROR'}, status=400)
                 
                 if not Posting.objects.filter(id = posting_id).exists():
                     return JsonResponse({'message' : "POSTING-DOES-NOT-EXIST"}, status=404)
                 
                 posting = Posting.objects.get(id = posting_id)
             
-                Comment.objects.create(
-                    content    = content,
-                    user_id    = user_id,
-                    posting_id = posting.id
-                )
+                with transaction.atomic():
+                    Comment.objects.create(
+                        content    = content,
+                        user_id    = user_id,
+                        posting_id = posting.id
+                    )
                 
                 return JsonResponse({'message' : 'SUCCESS'}, status=200)
             
