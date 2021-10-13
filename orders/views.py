@@ -47,7 +47,6 @@ class CartView(View):
                     'id'            : stuff.id
                 }for stuff in cart]
 
-
             return JsonResponse({'CART': res}, status=200)
 
         except KeyError as e:
