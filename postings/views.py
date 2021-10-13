@@ -29,12 +29,8 @@ class PostingView(View):
                     product_id = product_id
                 )
                 
-                if urls :
-                    for image_url in urls :
-                        Image.objects.create(
-                            urls         = image_url,
-                            posting_id   = posting.id
-                        ) 
+            Image.objects.bulk_create([Image(urls=image_url, product_id=product_id) for image_url in urls])
+            
             return JsonResponse({'message' : 'SUCCESS'}, status=201)
         
         except JSONDecodeError:
