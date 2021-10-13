@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views import View
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
+
 from users.models import User, Gender
 from spao.settings import SECRET_KEY, ALGORITHMS
 
@@ -50,6 +51,7 @@ class SignUpView(View):
                 gender              = Gender.objects.get(id=gender)
             )
             return JsonResponse({'MESSAGE':'SUCCESS'}, status=201)
+
 
         except MultipleObjectsReturned:
             return JsonResponse({'MESSAGE':'MULTIPLE_OBJECTS'}, status=400)
