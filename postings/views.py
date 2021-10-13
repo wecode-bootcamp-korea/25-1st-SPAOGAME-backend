@@ -4,9 +4,7 @@ from django.views import View
 from django.http.response import JsonResponse
 
 from postings.models import Posting, Comment
-from users.models import User
-from products.models import  Image, Product
-from django.shortcuts import render
+from products.models import  Image
 from users.decorators import login_decorator
 from django.db import transaction 
 
@@ -16,9 +14,10 @@ class PostingView(View):
         try:
             data        = json.loads(request.body)
          
-            user_id     = request.user.id
-            content     = data.get('content')
-            title       = data['title']
+            # user_id     = request.user.id
+            user_id     = 1,
+            content     = data.get('review_content',None)
+            title       = data['review_title']
             product_id  = data['product_id']
             urls        = data.get('urls',None)
         
@@ -29,8 +28,9 @@ class PostingView(View):
                     title      = title,
                     product_id = product_id
                 )
-                    
-            Image.objects.bulk_create([Image(urls=image_url, product_id=product_id) for image_url in urls])
+                
+            if urls:        
+                Image.objects.bulk_create([Image(urls=image_url, posting_id=posting.id) for image_url in urls])
         
             return JsonResponse({'message' : 'SUCCESS'}, status=201)
         
