@@ -16,7 +16,7 @@ class CartView(View):
             quantity   = data['quantity']
 
             if not DetailedProduct.objects.filter(id=detailed_product_id).exists():
-                return JsonResponse({"MESSAGE":"DOES_NOT_EXIST"}, status=400)
+                return JsonResponse({"MESSAGE":"DEATAILED_PRODUCT_DOES_NOT_EXIST"}, status=400)
 
             if Basket.objects.filter(product_id=detailed_product_id).exists():
                 return JsonResponse({"MESSAGE":"ALREADY_EXIST"}, status=400)
@@ -31,3 +31,24 @@ class CartView(View):
 
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+
+    @login_decorator
+    def get(self, request):
+        try:
+            user = request.user
+            cart = Basket.objects.filter(user=user)
+            res  = [{
+                    'product_name'  : stuff.product.product.name,
+                    'price'         : stuff.product.product.price,
+                    'image'         : stuff.product.product.thumbnail_image_url,
+                    'color'         : stuff.product.color,
+                    'size'          : stuff.product.size,
+                    'quantity'      : stuff.quantity,
+                    'id'            : stuff.id
+                }for stuff in cart]
+
+
+            return JsonResponse({'CART': res}, status=200)
+
+        except KeyError as e:
+            return JsonResponse({'MESSAGE': f'{e}'+'_KEY_ERROR'}, status=401)
