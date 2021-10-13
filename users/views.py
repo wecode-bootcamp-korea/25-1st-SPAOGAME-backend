@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views import View
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
+
 from users.models import User, Gender
 from spao.settings import SECRET_KEY, ALGORITHMS
 
@@ -21,7 +22,7 @@ class SignUpView(View):
             address1            = data['address1']
             address2            = data.get('address2',None)
             birthday            = data['birthday']
-            gender              = data['gender']w
+            gender              = data['gender']
 
             email_validation    = re.compile("^[a-zA-Z0-9+-_]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
             password_validation = re.compile("^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%*^&+=]).*$")
@@ -52,6 +53,7 @@ class SignUpView(View):
                 gender              = Gender.objects.get(id=gender)
             )
             return JsonResponse({'MESSAGE':'SUCCESS'}, status=201)
+
 
         except MultipleObjectsReturned:
             return JsonResponse({'MESSAGE':'MULTIPLE_OBJECTS'}, status=400)
@@ -95,10 +97,10 @@ class SignInView(View):
             return JsonResponse({'MESSAGE':'SUCCESS', 'TOKEN' : token}, status=200)
 
         except KeyError as e:
-            return JsonResponse({'MESSAGE':f'{e}'+'KEY_ERROR'}, status=400)
+            return JsonResponse({'MESSAGE':f'{e}'+'_KEY_ERROR'}, status=400)
         
         except TypeError as e :
-            return JsonResponse({'message': e}, status=400)
+            return JsonResponse({'message': f'{e}'}, status=400)
         
         except ValueError:
             return JsonResponse({'MESSAGE':'VALUE_ERROR'}, status=400)
