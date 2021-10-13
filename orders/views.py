@@ -26,7 +26,6 @@ class CartView(View):
                 product_id = detailed_product_id,
                 quantity   = quantity,
                 )
-
             return JsonResponse({'MESSAGE':'CREATE_BASKET'}, status=201)
 
         except KeyError:
@@ -46,9 +45,20 @@ class CartView(View):
                     'quantity'      : stuff.quantity,
                     'id'            : stuff.id
                 }for stuff in cart]
-
-
             return JsonResponse({'CART': res}, status=200)
+
+        except KeyError as e:
+            return JsonResponse({'MESSAGE': f'{e}'+'_KEY_ERROR'}, status=401)
+
+    @login_decorator
+    def delete(self, request, basket_id):
+        try:
+            cart = Basket.objects.get(id=basket_id)
+            cart.delete()
+            return JsonResponse({'MESSAGE': 'DELETE_SUCCESS'}, status=204)
+
+        except Basket.DoesNotExist:
+            return JsonResponse({'MESSAGE': 'NOTING_IN_CART'}, status=404)
 
         except KeyError as e:
             return JsonResponse({'MESSAGE': f'{e}'+'_KEY_ERROR'}, status=401)
