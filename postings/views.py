@@ -1,5 +1,6 @@
 import json
 from json.decoder import JSONDecodeError
+from django.core.exceptions import ObjectDoesNotExist
 from django.views import View
 from django.http.response import JsonResponse
 
@@ -9,18 +10,18 @@ from users.decorators import login_decorator
 from django.db import transaction 
 
 class PostingView(View):
-    @login_decorator
+  #  @login_decorator
     def post(self, request):       
         try:
             data        = json.loads(request.body)
-         
+        
             # user_id     = request.user.id
             user_id     = 1,
             content     = data.get('review_content',None)
-            title       = data['review_title']
+            title       = data['title']
             product_id  = data['product_id']
-            urls        = data.get('urls',None)
-        
+            urls        = data.get('review_image',None)
+            
             with transaction.atomic():
                 posting = Posting.objects.create(
                     user_id    = user_id,
@@ -54,19 +55,18 @@ class CommentView(View):
                 if not (content and posting_id):
                     return JsonResponse({'message' : 'KEY-ERROR'}, status=400)
                 
-                if not Posting.objects.filter(id = posting_id).exists():
-                    return JsonResponse({'message' : "POSTING-DOES-NOT-EXIST"}, status=404)
-                
                 posting = Posting.objects.get(id = posting_id)
-            
-                with transaction.atomic():
-                    Comment.objects.create(
-                        content    = content,
-                        user_id    = user_id,
-                        posting_id = posting.id
-                    )
+                
+                Comment.objects.create(
+                    content    = content,
+                    user_id    = user_id,
+                    posting_id = posting.id
+                )
                 
                 return JsonResponse({'message' : 'SUCCESS'}, status=200)
             
             except JSONDecodeError:
                 return JsonResponse({'message' : 'JSON_DECODE_ERROR'}, status=400)
+            
+            except ObjectDoesNotExist:
+                return JsonResponse({'message' : 'POSTING_DOES_NOT_EXIST'}, status=400)

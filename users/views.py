@@ -86,10 +86,9 @@ class SignInView(View):
                 return JsonResponse({'MESSAGE':'USER_DOES_NOT_EXIST'}, status=401)
             
             user = User.objects.get(email=email)
-            print(user)
+            
             if not bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
-                return JsonResponse({'MESSAGE':'INVALID_USER'}, status=401)
-        
+                return JsonResponse({'MESSAGE':'INVALID_USER'}, status=401)      
 
             token = jwt.encode({'id' : user.id}, SECRET_KEY, ALGORITHMS)
             
@@ -103,4 +102,3 @@ class SignInView(View):
         
         except ValueError:
             return JsonResponse({'MESSAGE':'VALUE_ERROR'}, status=400)
-        
