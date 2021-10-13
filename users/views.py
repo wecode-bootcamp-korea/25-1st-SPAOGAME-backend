@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views import View
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
+
 from users.models import User, Gender
 from spao.settings import SECRET_KEY, ALGORITHMS
 

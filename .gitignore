@@ -311,3 +311,19 @@ cython_debug/
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,pycharm,linux,macos
 
 my_settings.py
+
+db_uploader.py
+
+db_detailProduct.py
+
+spao.csv
+
+special_images.py
+
+spao_user.csv
+
+db_userUploader.py
+
+db_detail_uploader.py
+
+detail_product.csv
