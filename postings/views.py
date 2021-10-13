@@ -15,8 +15,7 @@ class PostingView(View):
         try:
             data        = json.loads(request.body)
         
-            # user_id     = request.user.id
-            user_id     = 1,
+            user_id     = request.user.id
             content     = data.get('review_content',None)
             title       = data['title']
             product_id  = data['product_id']
