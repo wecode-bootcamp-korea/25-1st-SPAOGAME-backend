@@ -2,6 +2,7 @@ import json
 
 from django.http import JsonResponse
 from django.views import View
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from orders.models import Basket
 from products.models import Size, Color, DetailedProduct
@@ -36,22 +37,8 @@ class CartView(View):
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
 
-    @login_decorator
-    def get(self, request):
-        try:
-            user = request.user
-            cart = Basket.objects.filter(user=user)
-            res  = [{
-                    'product_name'  : stuff.product.product.name,
-                    'price'         : stuff.product.product.price,
-                    'image'         : stuff.product.product.thumbnail_image_url,
-                    'color'         : stuff.product.color,
-                    'size'          : stuff.product.size,
-                    'quantity'      : stuff.quantity,
-                    'id'            : stuff.id
-                }for stuff in cart]
+        except MultipleObjectsReturned:
+            return JsonResponse({'MESSAGE':'MULTIPLE_OBJECTS'}, status=400)
 
-            return JsonResponse({'CART': res}, status=200)
-
-        except KeyError as e:
-            return JsonResponse({'MESSAGE': f'{e}'+'_KEY_ERROR'}, status=401)
+        except ObjectDoesNotExist:
+            return JsonResponse({'MESSAGE':'OBJECT_NOT_EXITST'}, status=400)
