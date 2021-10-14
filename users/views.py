@@ -20,7 +20,7 @@ class SignUpView(View):
             email               = data['email']
             mobile_number       = data['mobile_number']
             address1            = data['address1']
-            address2            = data['address2']
+            address2            = data.get('address2',None)
             birthday            = data['birthday']
             gender              = data['gender']
 
@@ -30,6 +30,9 @@ class SignUpView(View):
             if not email_validation.match(email):
                 return JsonResponse({"MESSAGE":"EMAIL_VALIDATION_ERROR"}, status=400)
 
+            if User.objects.filter(username=username).exists():
+                return JsonResponse({"MESSAGE":"USERNAME_ALREADY_EXITST"}, status=409)
+                            
             if User.objects.filter(email=email).exists():
                 return JsonResponse({"MESSAGE":"DUPLICATION_ERROR"}, status=400)
 
@@ -59,8 +62,8 @@ class SignUpView(View):
         except ObjectDoesNotExist:
             return JsonResponse({'MESSAGE':'OBJECT_NOT_EXITST'}, status=400)
 
-        except ValueError:
-            return JsonResponse({'MESSAGE':'VALUE_ERROR'}, status=400)
+        except ValueError as e:
+            return JsonResponse({'MESSAGE':f'{e}'+'VALUE_ERROR'}, status=400)
 
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
@@ -94,11 +97,11 @@ class SignInView(View):
             
             return JsonResponse({'TOKEN' : token}, status=200)
 
-        except KeyError:
-            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+        except KeyError as e:
+            return JsonResponse({'MESSAGE':f'{e}'+'_KEY_ERROR'}, status=400)
         
         except TypeError as e :
-            return JsonResponse({'message': e}, status=400)
+            return JsonResponse({'message': f'{e}'}, status=400)
         
         except ValueError:
             return JsonResponse({'MESSAGE':'VALUE_ERROR'}, status=400)
