@@ -13,6 +13,7 @@ from products.models      import  (
 )
 from users.decorators     import login_decorator
 from django.db            import transaction
+
 class PostingView(View):
     @login_decorator
     def post(self, request):
@@ -28,7 +29,7 @@ class PostingView(View):
                     user_id    = user_id , 
                     content    = content,
                     title      = title,
-                    product_id = Product.objects.get(id=product_id).id
+                    product_id = product_id
                 )
    
             return JsonResponse({'message' : 'SUCCESS'}, status=201)
@@ -47,7 +48,6 @@ class CommentView(View):
                 user_id     = request.user
                 content     = data['comment_content']
                 posting_id  = data['posting_id']
-                print(data)
                 
                 if not (content and posting_id):
                     return JsonResponse({'message' : 'KEY-ERROR'}, status=400)
