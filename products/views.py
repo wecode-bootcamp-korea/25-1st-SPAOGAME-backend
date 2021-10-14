@@ -120,15 +120,24 @@ class ProductView(View) :
 
     def get(self, request, menu_name, category_name) :
         try :
-            offset = int(request.GET.get('offset', 0)) 
-            limit  = int(request.GET.get('limit', 0))
+            offset   = int(request.GET.get('offset', 0)) 
+            limit    = int(request.GET.get('limit', 0))
+            order_id = int(request.GET.get('order_id',0))
+
+            order_dic = {
+                0 : 'created_at',
+                1 : '-price',
+                2 : 'price',
+                3 : 'name'
+            }
 
             if limit-offset > 20 :
                 return JsonResponse({'message':'too much lists'}, status=400)
 
             menu_id     = Menu.objects.get(name=menu_name)
             category_id = Category.objects.get(menu_id=menu_id, name=category_name)
-            products    = Product.objects.filter(menu_id=menu_id, category_id=category_id)[offset:offset+limit]
+
+            products = Product.objects.filter(menu_id=menu_id, category_id=category_id).order_by(order_dic[order_id])[offset:offset+limit]
 
             goods = [{
                 'id'           : product.id,
@@ -153,7 +162,7 @@ class DetailProductView(View) :
         try :      
             products       = DetailedProduct.objects.filter(product_id=id) 
             colors         = DetailedProduct.objects.filter(product_id=id).values('color_id').distinct()
-            sizes          = DetailedProduct.objects.filter(product_id=id).values('size_id').distinct()
+            sizes          = DetailedProduct.objects.filter(product_id=id).values('size_id').order_by('size_id').distinct()
             product_images = Image.objects.filter(product_id=id)
             product_name   = Product.objects.get(id=id).name
             product_price  = Product.objects.get(id=id).price
@@ -194,6 +203,23 @@ class DetailProductView(View) :
             }]
                     
             return JsonResponse({'goods_detail':goods_detail}, status=200)
+
+        except AttributeError as e :
+            return JsonResponse({'message': e}, status=400)
+        
+        except TypeError as e :
+            return JsonResponse({'message': e}, status=400)
+
+class MainView(View) :
+    def get(self, request) :
+        try :
+            #product_id, images를 뿌려줘야 함
+            product = [{
+                "product_id" : product.id,
+                "image"      : product.thumbnail_image_url
+            } for product in Product.objects.all()]
+
+            return JsonResponse({'message':product}, status=200)
 
         except AttributeError as e :
             return JsonResponse({'message': e}, status=400)

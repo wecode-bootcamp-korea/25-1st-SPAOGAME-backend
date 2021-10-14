@@ -13,6 +13,7 @@ def login_decorator(func):
             token = jwt.decode(access_token, MY_SECRET_KEY, MY_ALGORITHMS)
             user = User.objects.get(id=token['id'])
             request.user = user
+            
         except jwt.exceptions.DecodeError:
             return JsonResponse({'MESSAGE': 'DECODE_ERROR'}, status=401)
         except User.DoesNotExist:

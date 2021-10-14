@@ -1,11 +1,11 @@
 from django.urls    import path
-from products.models import Category
 
 from products.views import (
     CategoryView,
     DetailProductView,
     MenuView,
-    ProductView
+    ProductView,
+    MainView
 )
 
 urlpatterns = [
@@ -15,4 +15,5 @@ urlpatterns = [
     path('', ProductView.as_view()),
     path('/<str:menu_name>/<str:category_name>', ProductView.as_view()),
     path('/<int:id>', DetailProductView.as_view()),
+    path('/main', MainView.as_view())
 ]
