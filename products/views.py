@@ -126,7 +126,6 @@ class ProductView(View) :
             if limit-offset > 20 :
                 return JsonResponse({'message':'too much lists'}, status=400)
 
-            goods       = []
             menu_id     = Menu.objects.get(name=menu_name)
             category_id = Category.objects.get(menu_id=menu_id, name=category_name)
             products    = Product.objects.filter(menu_id=menu_id, category_id=category_id)[offset:offset+limit]
@@ -138,8 +137,8 @@ class ProductView(View) :
                 'img_urls'     : product.thumbnail_image_url,
                 'review_count' : product.posting_set.all().count(),
                 'colors'       : [Color.objects.get(id=color['color_id']).name for color 
-                in DetailedProduct.objects.filter(product_id=product.id).values('color_id').distinct()[:4] ]
-            } for product in products ]
+                in DetailedProduct.objects.filter(product_id=product.id).values('color_id').distinct()]
+            } for product in products]
 
             return JsonResponse({'goods':goods}, status=200)
 
@@ -153,7 +152,7 @@ class DetailProductView(View) :
     def get(self, request, id) :
         try :      
             products       = DetailedProduct.objects.filter(product_id=id) 
-            colors         = DetailedProduct.objects.filter(product_id=id).values('color_id').distinct()[:4]
+            colors         = DetailedProduct.objects.filter(product_id=id).values('color_id').distinct()
             sizes          = DetailedProduct.objects.filter(product_id=id).values('size_id').distinct()
             product_images = Image.objects.filter(product_id=id)
             product_name   = Product.objects.get(id=id).name
@@ -165,7 +164,6 @@ class DetailProductView(View) :
                 color_list   = [Color.objects.get(id=color['color_id']).name for color in colors]
                 size_list    = [Size.objects.get(id=size['size_id']).name for size in sizes]
                 image_list   = [image.urls for image in product_images]
-                posting_info = []
                 postings     = Posting.objects.filter(product_id=product.product_id).order_by('-created_at')
 
                 posting_info = [{
