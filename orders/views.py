@@ -42,3 +42,23 @@ class CartView(View):
 
         except ObjectDoesNotExist:
             return JsonResponse({'MESSAGE':'OBJECT_NOT_EXITST'}, status=400)
+
+
+    @login_decorator
+    def get(self, request):
+        try:
+            user = request.user
+            cart = Basket.objects.filter(user=user)
+            res  = [{
+                    'product_name'  : stuff.product.product.name,
+                    'price'         : stuff.product.product.price,
+                    'image'         : stuff.product.product.thumbnail_image_url,
+                    'color'         : stuff.product.color,
+                    'size'          : stuff.product.size,
+                    'quantity'      : stuff.quantity,
+                    'id'            : stuff.id
+                }for stuff in cart]
+            return JsonResponse({'CART': res}, status=200)
+
+        except KeyError as e:
+            return JsonResponse({'MESSAGE': f'{e}'+'_KEY_ERROR'}, status=401)
