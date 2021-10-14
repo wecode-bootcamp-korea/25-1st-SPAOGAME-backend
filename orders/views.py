@@ -2,6 +2,7 @@ import json
 
 from django.http  import JsonResponse
 from django.views import View
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from orders.models      import Basket
 from products.models    import Size, Color, DetailedProduct
@@ -35,6 +36,13 @@ class CartView(View):
 
         except KeyError as e:
             return JsonResponse({'MESSAGE':f'{e}'+'KEY_ERROR'}, status=400)
+
+        except MultipleObjectsReturned:
+            return JsonResponse({'MESSAGE':'MULTIPLE_OBJECTS'}, status=400)
+
+        except ObjectDoesNotExist:
+            return JsonResponse({'MESSAGE':'OBJECT_NOT_EXITST'}, status=400)
+
 
     @login_decorator
     def get(self, request):
@@ -81,3 +89,9 @@ class CartEditView(View):
 
         except KeyError as e:
             return JsonResponse({'MESSAGE': f'{e}'+'_KEY_ERROR'}, status=401)
+
+        except MultipleObjectsReturned:
+            return JsonResponse({'MESSAGE':'MULTIPLE_OBJECTS'}, status=400)
+
+        except ObjectDoesNotExist:
+            return JsonResponse({'MESSAGE':'OBJECT_NOT_EXITST'}, status=400)

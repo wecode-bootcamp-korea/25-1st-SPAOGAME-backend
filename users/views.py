@@ -27,8 +27,6 @@ class SignUpView(View):
             email_validation    = re.compile("^[a-zA-Z0-9+-_]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
             password_validation = re.compile("^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%*^&+=]).*$")
 
-            print(data)
-
             if not email_validation.match(email):
                 return JsonResponse({"MESSAGE":"EMAIL_VALIDATION_ERROR"}, status=400)
 
