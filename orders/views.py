@@ -19,7 +19,7 @@ class CartView(View):
                                                                 color_id=color_id,
                                                                 size_id =size_id)
             quantity            = data['quantity']
-
+            print(data)
             if not DetailedProduct.objects.filter(id=detailed_product.id).exists():
                 return JsonResponse({"MESSAGE":"DOES_NOT_EXIST"}, status=400)
 
@@ -33,8 +33,8 @@ class CartView(View):
                 )
             return JsonResponse({'MESSAGE':'CREATE_BASKET'}, status=201)
 
-        except KeyError:
-            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+        except KeyError as e:
+            return JsonResponse({'MESSAGE':f'{e}'+'KEY_ERROR'}, status=400)
 
     @login_decorator
     def get(self, request):
