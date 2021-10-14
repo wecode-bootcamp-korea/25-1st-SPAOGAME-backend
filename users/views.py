@@ -64,7 +64,7 @@ class SignUpView(View):
 
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
-
+        
         except TypeError as e :
             return JsonResponse({'message': e}, status=400)        
 
@@ -86,13 +86,13 @@ class SignInView(View):
                 return JsonResponse({'MESSAGE':'USER_DOES_NOT_EXIST'}, status=401)
             
             user = User.objects.get(email=email)
-                
+            
             if not bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
-                return JsonResponse({'MESSAGE':'INVALID_USER'}, status=401)
+                return JsonResponse({'MESSAGE':'INVALID_USER'}, status=401)      
 
             token = jwt.encode({'id' : user.id}, SECRET_KEY, ALGORITHMS)
             
-            return JsonResponse({'MESSAGE':'SUCCESS', 'TOKEN' : token}, status=200)
+            return JsonResponse({'TOKEN' : token}, status=200)
 
         except KeyError as e:
             return JsonResponse({'MESSAGE':f'{e}'+'_KEY_ERROR'}, status=400)
