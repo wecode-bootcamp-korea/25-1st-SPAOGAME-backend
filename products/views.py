@@ -122,7 +122,7 @@ class ProductView(View) :
         try :
             offset   = int(request.GET.get('offset', 0)) 
             limit    = int(request.GET.get('limit', 0))
-            order_id = int(request.GET.get('order_id',0))
+            order_id = int(request.GET.get('order_id', 0))
 
             order_dic = {
                 0 : 'created_at',
@@ -136,8 +136,7 @@ class ProductView(View) :
 
             menu_id     = Menu.objects.get(name=menu_name)
             category_id = Category.objects.get(menu_id=menu_id, name=category_name)
-
-            products = Product.objects.filter(menu_id=menu_id, category_id=category_id).order_by(order_dic[order_id])[offset:offset+limit]
+            products    = Product.objects.filter(menu_id=menu_id, category_id=category_id).order_by(order_dic[order_id])[offset:offset+limit]
 
             goods = [{
                 'id'           : product.id,
@@ -213,7 +212,6 @@ class DetailProductView(View) :
 class MainView(View) :
     def get(self, request) :
         try :
-            #product_id, images를 뿌려줘야 함
             product = [{
                 "product_id" : product.id,
                 "image"      : product.thumbnail_image_url

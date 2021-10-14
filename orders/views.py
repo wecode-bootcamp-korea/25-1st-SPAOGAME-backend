@@ -2,15 +2,20 @@ import json
 
 from django.http            import JsonResponse
 from django.views           import View
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-
-from orders.models import Basket
-from products.models import Size, Color, DetailedProduct
-from users.decorators import login_decorator
-from users.models import User
+from django.core.exceptions import (
+    ObjectDoesNotExist,
+    MultipleObjectsReturned
+)
+from orders.models          import Basket
+from products.models        import (
+    Size,
+    Color,
+    DetailedProduct
+)
+from users.decorators       import login_decorator
 
 class CartView(View):
-  #  @login_decorator
+    @login_decorator
     def post(self, request):
         try:
             data                = json.loads(request.body)
@@ -21,7 +26,6 @@ class CartView(View):
                                                                 color_id=color_id,
                                                                 size_id =size_id)
             quantity            = data['quantity']
-            print(data)
 
             if not DetailedProduct.objects.filter(id=detailed_product.id).exists():
                 return JsonResponse({"MESSAGE":"DOES_NOT_EXIST"}, status=400)
@@ -30,14 +34,14 @@ class CartView(View):
                 return JsonResponse({"MESSAGE":"ALREADY_EXIST"}, status=400)
 
             Basket.objects.create(
-                user       = User.objects.get(id=1), #request.user,
+                user       = request.user,
                 product_id = detailed_product.id,
                 quantity   = quantity,
-                )
+            )
             return JsonResponse({'MESSAGE':'CREATE_BASKET'}, status=201)
 
         except KeyError as e:
-            return JsonResponse({'MESSAGE':f'{e}'+'KEY_ERROR'}, status=400)
+            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
 
         except MultipleObjectsReturned:
             return JsonResponse({'MESSAGE':'MULTIPLE_OBJECTS'}, status=400)
@@ -61,6 +65,7 @@ class CartView(View):
                     'id'                    : stuff.id,
                     'detailed_product_id'   : stuff.product.product.id
                 }for stuff in cart]
+
             return JsonResponse({'res': res}, status=200)
                     
         except TypeError as e :
@@ -101,7 +106,7 @@ class CartView(View):
             return JsonResponse({'MESSAGE': 'NOTING_IN_CART'}, status=404)
 
         except KeyError as e:
-            return JsonResponse({'MESSAGE': f'{e}'+'_KEY_ERROR'}, status=401)
+            return JsonResponse({'MESSAGE': 'KEY_ERROR'}, status=401)
 
         except MultipleObjectsReturned:
             return JsonResponse({'MESSAGE':'MULTIPLE_OBJECTS'}, status=400)
