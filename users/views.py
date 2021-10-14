@@ -1,13 +1,13 @@
 import json, re
 import bcrypt, jwt
 
-from django.http import JsonResponse
-from django.views import View
+from django.http            import JsonResponse
+from django.views           import View
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 
-from users.models import User, Gender
-from spao.settings import SECRET_KEY, ALGORITHMS
+from users.models   import User, Gender
+from spao.settings  import SECRET_KEY, ALGORITHMS
 
 class SignUpView(View):
     def post(self, request):
@@ -69,10 +69,10 @@ class SignUpView(View):
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
         
         except TypeError as e :
-            return JsonResponse({'message': e}, status=400)        
+            return JsonResponse({'MESSAGE': e}, status=400)        
 
         except json.decoder.JSONDecodeError:
-            return JsonResponse({'message':'JSONDecodeError'}, status=400)
+            return JsonResponse({'MESSAGE':'JSONDecodeError'}, status=400)
 
 class SignInView(View):
     def post(self, request):
@@ -101,7 +101,7 @@ class SignInView(View):
             return JsonResponse({'MESSAGE':f'{e}'+'_KEY_ERROR'}, status=400)
         
         except TypeError as e :
-            return JsonResponse({'message': f'{e}'}, status=400)
+            return JsonResponse({'MESSAGE': f'{e}'}, status=400)
         
         except ValueError:
             return JsonResponse({'MESSAGE':'VALUE_ERROR'}, status=400)

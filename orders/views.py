@@ -1,7 +1,7 @@
 import json
 
-from django.http  import JsonResponse
-from django.views import View
+from django.http            import JsonResponse
+from django.views           import View
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from orders.models      import Basket
@@ -20,7 +20,7 @@ class CartView(View):
                                                                 color_id=color_id,
                                                                 size_id =size_id)
             quantity            = data['quantity']
-            print(data)
+
             if not DetailedProduct.objects.filter(id=detailed_product.id).exists():
                 return JsonResponse({"MESSAGE":"DOES_NOT_EXIST"}, status=400)
 
@@ -43,44 +43,55 @@ class CartView(View):
         except ObjectDoesNotExist:
             return JsonResponse({'MESSAGE':'OBJECT_NOT_EXITST'}, status=400)
 
-
     @login_decorator
     def get(self, request):
-        try:
+        try :
             user = request.user
             cart = Basket.objects.filter(user=user)
+            
             res  = [{
-                    'product_name'  : stuff.product.product.name,
-                    'price'         : stuff.product.product.price,
-                    'image'         : stuff.product.product.thumbnail_image_url,
-                    'color'         : stuff.product.color,
-                    'size'          : stuff.product.size,
-                    'quantity'      : stuff.quantity,
-                    'id'            : stuff.id
+                    'product_name'          : stuff.product.product.name,
+                    'price'                 : stuff.product.product.price,
+                    'image'                 : stuff.product.product.thumbnail_image_url,
+                    'color'                 : stuff.product.color.name,
+                    'size'                  : stuff.product.size.name,
+                    'quantity'              : stuff.quantity,
+                    'id'                    : stuff.id,
+                    'detailed_product_id'   : stuff.product.product.id
                 }for stuff in cart]
-            return JsonResponse({'CART': res}, status=200)
+            return JsonResponse({'res': res}, status=200)
+                    
+        except TypeError as e :
+            return JsonResponse({'MESSAGE': e}, status=400)   
 
-        except KeyError as e:
-            return JsonResponse({'MESSAGE': f'{e}'+'_KEY_ERROR'}, status=401)
-
-class CartEditView(View):
     @login_decorator
-    def patch(self, request, basket_id):
+    def patch(self, request):
         try:
-            data     = json.loads(request.body)
-            quantity = data['quantity']
-            cart     = Basket.objects.filter(id=basket_id, user_id=request.user)
+            data            = json.loads(request.body)
+            quantity        = data['quantity']
+            product_id      = data['detailed_product_id']
+            cart            = Basket.objects.get(product_id=product_id, user_id=request.user)
+            cart.quantity   = quantity
 
-            cart.update(quantity=quantity)
+            cart.save()
             return JsonResponse({'MESSAGE':'SUCCESS'}, status=201)
 
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
 
+        except MultipleObjectsReturned:
+            return JsonResponse({'MESSAGE':'MULTIPLE_OBJECTS'}, status=400)
+
+        except ObjectDoesNotExist:
+            return JsonResponse({'MESSAGE':'OBJECT_NOT_EXITST'}, status=400)
+
     @login_decorator
-    def delete(self, request, basket_id):
+    def delete(self, request):
         try:
-            cart = Basket.objects.get(id=basket_id)
+            data        = json.loads(request.body)
+            basket_id   = data["basket_id"]
+            cart        = Basket.objects.get(id=basket_id)
+
             cart.delete()
             return JsonResponse({'MESSAGE': 'DELETE_SUCCESS'}, status=204)
 
