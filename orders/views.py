@@ -2,11 +2,17 @@ import json
 
 from django.http            import JsonResponse
 from django.views           import View
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-
-from orders.models      import Basket
-from products.models    import Size, Color, DetailedProduct
-from users.decorators   import login_decorator
+from django.core.exceptions import (
+    ObjectDoesNotExist,
+    MultipleObjectsReturned
+)
+from orders.models          import Basket
+from products.models        import (
+    Size,
+    Color,
+    DetailedProduct
+)
+from users.decorators       import login_decorator
 
 class CartView(View):
     @login_decorator
@@ -31,11 +37,11 @@ class CartView(View):
                 user       = request.user,
                 product_id = detailed_product.id,
                 quantity   = quantity,
-                )
+            )
             return JsonResponse({'MESSAGE':'CREATE_BASKET'}, status=201)
 
         except KeyError as e:
-            return JsonResponse({'MESSAGE':f'{e}'+'KEY_ERROR'}, status=400)
+            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
 
         except MultipleObjectsReturned:
             return JsonResponse({'MESSAGE':'MULTIPLE_OBJECTS'}, status=400)
@@ -59,6 +65,7 @@ class CartView(View):
                     'id'                    : stuff.id,
                     'detailed_product_id'   : stuff.product.product.id
                 }for stuff in cart]
+
             return JsonResponse({'res': res}, status=200)
                     
         except TypeError as e :
@@ -99,7 +106,7 @@ class CartView(View):
             return JsonResponse({'MESSAGE': 'NOTING_IN_CART'}, status=404)
 
         except KeyError as e:
-            return JsonResponse({'MESSAGE': f'{e}'+'_KEY_ERROR'}, status=401)
+            return JsonResponse({'MESSAGE': 'KEY_ERROR'}, status=401)
 
         except MultipleObjectsReturned:
             return JsonResponse({'MESSAGE':'MULTIPLE_OBJECTS'}, status=400)
