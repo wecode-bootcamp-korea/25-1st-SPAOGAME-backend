@@ -36,9 +36,9 @@
 
 #### 이기용
 
-- 상품 목록 조회 API
-- 상품 상세 조회 API
-- 상품 조건식 정렬 API
+- offset과 limit을 이용한 페이징기법으로 상품 목록 조회 API
+- 최신순, 가격높은순, 가격낮은순, 이름순 정렬을 이용한 상품 목록 조회 API
+- 특정 상품 클릭 시, 상품 상세정보 보여주는 상세정보 API
 
 #### 송영록
 
@@ -67,15 +67,15 @@
 - DEL/orders/cart (장바구니 삭제)
 - POST/postings  (후기 등록)
 - POST/postings/comments (댓글 등록)
-- POST/postings/int:comment_id (댓글 삭제)
+- POST/postings/<int:comment_id> (댓글 삭제)
 
 - POST/products/menus (메뉴 항목 추가)
 - GET/products/menus (메뉴 항목 리스트 조회)
 - POST/products/categories (카테고리 항목 추가)
-- GET/products/menus/menu_name (특정 메뉴별 카테고리 항목 리스트 조회)
+- GET/products/<str:menus>/<str:menu_name> (특정 메뉴별 카테고리 항목 리스트 조회)
 - POST/products (상품 등록)
-- GET/products/menu_name/category_name (특정 메뉴-카테고리별 상품 리스트 조회)
-- GET/products/product_id (특정 상품에 대한 상세페이지)
+- GET/products/<str:menu_name>/<str:category_name> (특정 메뉴-카테고리별 상품 리스트 조회)
+- GET/products/<int:product_id> (특정 상품에 대한 상세페이지)
 
 
 ## ❗ Reference
