@@ -14,11 +14,7 @@ import pymysql
 
 from pathlib import Path
 
-from my_settings import (
-    MY_ALGORITHMS,
-    MY_DATABASES,
-    MY_SECRET_KEY
-)
+
 
 pymysql.install_as_MySQLdb()
 
@@ -30,9 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = MY_SECRET_KEY
+SECRET_KEY = 'django-insecure-ms-_=#vpn+9!%#ip_+%1_l4&odmgt0c^s9v^3=rv+tax*5eazd'
 
-ALGORITHMS = MY_ALGORITHMS
+ALGORITHMS = 'HS256'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -115,7 +111,16 @@ WSGI_APPLICATION = 'spao.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = MY_DATABASES
+DATABASES = {
+    'default' : {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'spaogame',
+        'USER': 'root',
+        'PASSWORD': '12341234',
+        'HOST': 'spaogame.ckmyhybsxhuk.us-east-2.rds.amazonaws.com', #'127.0.0.1'
+        'PORT': '3306',
+    }
+}
 
 
 # Password validation
