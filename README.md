@@ -28,8 +28,8 @@
 
 #### 김주현
 
-- 상품 리뷰 생성, 조회, 수정, 삭제 API
-- 상품 리뷰 댓글 생성, 조회, 수정, 삭제 API
+- 상품상세페이지 후기 및 댓글 등록 기능 구현
+- 메인페이지 검색기능 구현
 
 #### 이기용
 
@@ -53,7 +53,9 @@
 - GET/orders/cart (장바구니 조회)
 - PATCH/orders/cart (장바구니 수정)
 - DEL/orders/cart (장바구니 삭제)
-
+- POST/postings  (후기 등록)
+- POST/postings/comments (댓글 등록)
+- POST/postings/int:comment_id (댓글 삭제)
 
 ## ❗ Reference
 - 이 프로젝트는 [**SPAO**](http://spao.com/) 사이트를 참조하여 학습목적으로 만들었습니다.
