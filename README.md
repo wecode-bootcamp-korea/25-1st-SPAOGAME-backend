@@ -12,8 +12,8 @@
 
 - 개발 기간 : 2021-10-05 ~ 2021-10-15 (공휴일 포함)
 - 개발 인원 <br/>
- 👨‍👧‍👦 **Front-End** 3명 : 강성구, 김현진, 정경훈 <br/>
- 👨‍👧‍👦 **Back-End** 3명 : 김주현, [이기용](https://github.com/leeky940926), 송영록
+ 👨‍👧‍👦 **Front-End** 3명 : [강성구](https://github.com/seonggookang), [김현진](https://github.com/71summernight), [정경훈](https://github.com/kyunghoon1017) <br/>
+ 👨‍👧‍👦 **Back-End** 3명 : [김주현](https://github.com/kjhabc2002), [이기용](https://github.com/leeky940926), [송영록](https://github.com/crescentfull)
 
 ## 🎞 프로젝트 구현 영상
 
