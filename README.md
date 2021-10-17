@@ -8,23 +8,23 @@
 - 팀원들 수준별로 적절한 역할 분담과 애자일한 스크럼 방식의 미팅, 그리고 규칙적이고 능동적인 의사소통으로 프로젝트를 성공적으로 마무리.
 - 기획 과정 없이 짧은 기간 안에 기술 습득 및 기본 기능 구현에 집중하기 위해서 SPAO 사이트를 참고.
 
-## 📃 개발 기간 및 개발 인원
+## 📅 개발 기간 및 개발 인원
 
 - 개발 기간 : 2021-10-05 ~ 2021-10-15 (공휴일 포함)
 - 개발 인원 <br/>
  👨‍👧‍👦 **Front-End** 3명 : [강성구](https://github.com/seonggookang), [김현진](https://github.com/71summernight), [정경훈](https://github.com/kyunghoon1017) <br/>
  👨‍👧‍👦 **Back-End** 3명 : [김주현](https://github.com/kjhabc2002), [이기용](https://github.com/leeky940926), [송영록](https://github.com/crescentfull)
 
-## 🎞 프로젝트 구현 영상
+## 🎬 프로젝트 구현 영상
 
-- 📎 [영상 링크]
+- 🔗 [영상 링크]
 
 ## ⚙ 적용 기술
 - **Front-End** : HTML5, CSS3, React, SASS, JSX
 - **Back-End** : Python, Django, MySQL, jwt, bcypt, AWS RDS, AWS EC2
 - **Common** : Git, Github, Slack, Trello, Postman or Insomnia
 
-## 데이터베이스 DIAGRAM
+## 🗜 데이터베이스 DIAGRAM
 ![SPAO_diagram_final](https://user-images.githubusercontent.com/78721108/137625673-58007c42-c404-4489-be98-d9a47b6dfe4d.png)
 
 ## 💻 구현 기능
