@@ -24,7 +24,7 @@
 - **Back-End** : Python, Django, MySQL, jwt, bcypt, AWS RDS, AWS EC2
 - **Common** : Git, Github, Slack, Trello, Postman or Insomnia
 
-## 🗜 데이터베이스 DIAGRAM
+## 🗜 [데이터베이스 Diagram](https://www.erdcloud.com/d/m3PMPFjJyi8rAWYGK)
 ![SPAO_diagram_final](https://user-images.githubusercontent.com/78721108/137625673-58007c42-c404-4489-be98-d9a47b6dfe4d.png)
 
 ## 💻 구현 기능
@@ -39,7 +39,6 @@
 - 상품 목록 조회 API
 - 상품 상세 조회 API
 - 상품 조건식 정렬 API
-- 
 
 #### 송영록
 
@@ -69,6 +68,15 @@
 - POST/postings  (후기 등록)
 - POST/postings/comments (댓글 등록)
 - POST/postings/int:comment_id (댓글 삭제)
+
+- POST/products/menus (메뉴 항목 추가)
+- GET/products/menus (메뉴 항목 리스트 조회)
+- POST/products/categories (카테고리 항목 추가)
+- GET/products/menus/menu_name (특정 메뉴별 카테고리 항목 리스트 조회)
+- POST/products (상품 등록)
+- GET/products/menu_name/category_name (특정 메뉴-카테고리별 상품 리스트 조회)
+- GET/products/product_id (특정 상품에 대한 상세페이지)
+
 
 ## ❗ Reference
 - 이 프로젝트는 [**SPAO**](http://spao.com/) 사이트를 참조하여 학습목적으로 만들었습니다.
