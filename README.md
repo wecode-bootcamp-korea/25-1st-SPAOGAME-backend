@@ -24,6 +24,9 @@
 - **Back-End** : Python, Django, MySQL, jwt, bcypt, AWS RDS, AWS EC2
 - **Common** : Git, Github, Slack, Trello, Postman or Insomnia
 
+## 데이터베이스 DIAGRAM
+![SPAO_diagram_final](https://user-images.githubusercontent.com/78721108/137625673-58007c42-c404-4489-be98-d9a47b6dfe4d.png)
+
 ## 💻 구현 기능
 
 #### 김주현
