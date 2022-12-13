@@ -168,7 +168,7 @@ class DetailProductView(View) :
             posting_count  = Posting.objects.filter(product_id=id).count()
 
             for product in products :
-                          
+
                 color_list   = [Color.objects.get(id=color['color_id']).name for color in colors]
                 size_list    = [Size.objects.get(id=size['size_id']).name for size in sizes]
                 image_list   = [image.urls for image in product_images]
@@ -202,22 +202,6 @@ class DetailProductView(View) :
             }]
                     
             return JsonResponse({'goods_detail':goods_detail}, status=200)
-
-        except AttributeError as e :
-            return JsonResponse({'message': e}, status=400)
-        
-        except TypeError as e :
-            return JsonResponse({'message': e}, status=400)
-
-class MainView(View) :
-    def get(self, request) :
-        try :
-            product = [{
-                "product_id" : product.id,
-                "image"      : product.thumbnail_image_url
-            } for product in Product.objects.all()]
-
-            return JsonResponse({'message':product}, status=200)
 
         except AttributeError as e :
             return JsonResponse({'message': e}, status=400)
